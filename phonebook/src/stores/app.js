@@ -10,5 +10,9 @@ export const useAppStore = defineStore('app', {
   }),
   getters:{
     getContacts: (state) => state.contacts,
+  },
+
+  actions:{
+
   }
 })

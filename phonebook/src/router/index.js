@@ -8,7 +8,7 @@
 import { createRouter, createWebHistory } from 'vue-router/auto'
 import { setupLayouts } from 'virtual:generated-layouts'
 import { routes } from 'vue-router/auto-routes'
-import showAll from '@/pages/showAll.vue'
+import showAll from '@/pages/showAllTest.vue'
 import addContact from '@/pages/addContact.vue'
 
 const router = createRouter({
@@ -18,7 +18,7 @@ const router = createRouter({
       path: '/',
       name: 'home',
       component: showAll,
-      alias: ['/dashboard','/contacts','/all'],   // Alias for the /home route
+      alias: ['/dashboard','/all'],   // Alias for the /home route
 
     },
     {

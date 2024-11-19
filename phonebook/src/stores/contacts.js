@@ -13,5 +13,13 @@ export const useContactStore = defineStore('app', {
   }),
   getters:{
     getContacts: (state) => state.contacts,
+  },
+  actions:{
+    async getAllContacts(){
+        const response = await fetch('http://localhost:3001/contacts');
+        const data = await response.json();
+        this.contacts = data;
+        console.log(`contacts`, this.contacts);
+      }
   }
 })
