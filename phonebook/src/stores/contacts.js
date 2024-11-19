@@ -16,10 +16,24 @@ export const useContactStore = defineStore('app', {
   },
   actions:{
     async getAllContacts(){
-        const response = await fetch('http://localhost:3001/contacts');
+        const response = await fetch('http://localhost:3000/contacts');
         const data = await response.json();
         this.contacts = data;
         console.log(`contacts`, this.contacts);
-      }
+    },
+    
+    async addContact(contact) {
+      this.contacts.push(contact)
+      const response = await fetch('http://localhost:3000/contacts', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(contact),
+      })
+      const data = await response.json();
+      this.contacts.push(data);
+      alert(this.contacts)
+    }
   }
 })

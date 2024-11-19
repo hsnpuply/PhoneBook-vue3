@@ -1,27 +1,19 @@
 <template>
-  <h2 class="text-center my-4 bg-green ">
-    add Contact
+  <h2 class="text-center my-4 bg-green text-2xl ">
+    ثبت مخاطب جدید
   </h2>
   <div class="bg-black">
-    <form @submit.prevent="submitMyForm">
-      <v-text-field
-        v-model="fullname"
-        label="Name"
-      />
+    <form @submit.prevent="submitData()">
+      <v-text-field v-model="fullname" label="نام و نام خانوادگی" :label-size="42" />
 
-      <v-text-field
-      v-model="phoneNumber"
-        label="Phone Number"
-      />
+      <v-text-field v-model="phoneNumber" label="شماره تلفن" />
 
-      <v-btn
-        class="me-4"
-        type="submit"
-      >
+      <v-text-field v-model="selectedDate" type="date" label="انتخاب تاریخ تولد" />
+      <v-btn class="me-4 bg-success" type="submit">
         submit
       </v-btn>
 
-      <v-btn @click="handleReset">
+      <v-btn class="bg-info" @click="handleReset">
         clear
       </v-btn>
     </form>
@@ -30,34 +22,53 @@
 
 <script setup>
 import { useContactStore } from '../stores/contacts.js';
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
 import { Icon } from '@iconify/vue';
 
-const fullname=ref('')
-const phoneNumber=ref('')
-const email=ref('')
+const contactsStore = useContactStore();
 
-const handleReset=()=>{
-  fullname.value=''
-  phoneNumber.value=''  
+
+
+const fullname = ref('')
+const phoneNumber = ref('')
+const selectedDate = ref('');
+
+const allContactInfo = computed(() => ({
+  fullname: fullname.value,
+  phoneNumber: phoneNumber.value,
+  selectedDate: selectedDate.value
+}))
+
+const submitData = () => {
+  console.log(allContactInfo.value)
+  contactsStore.addContact(allContactInfo.value)
+  console.log(contactsStore.contacts);
+
 }
 
-const submitMyForm = ()=>{
-alert(fullname.value + '\n' + phoneNumber.value)
-handleReset()
+const handleReset = () => {
+  fullname.value = ''
+  phoneNumber.value = ''
+  selectedDate.value = ''
 }
-const AllContacts =ref([
+
+const submitMyForm = () => {
+  alert(fullname.value + '\n' + phoneNumber.value + '\n' + selectedDate.value)
+  handleReset()
+}
+const AllContacts = ref([
 
 ])
 
 </script>
 <style scoped>
-.myP{
+.myP {
   display: flex;
   align-items: center;
-  gap:1rem;
+  gap: 1rem;
 }
-.contactControllButtons{
+
+.contactControllButtons {
   gap: 1rem;
 }
 </style>

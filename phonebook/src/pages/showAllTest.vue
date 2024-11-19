@@ -3,42 +3,31 @@
     PhoneBook
   </h2>
   <div class="bg-green w-full">
-  <h1 class="bg-red text-2xl">show all tests</h1>
-  <p>Lorem ipsum dolor sit.</p>
-  <p>{{ allContacts[3] }}</p>
-    
-    <ul
-      class="flex items-center  flex-col  "
-    >
-      <li
-        v-for="(item,index) in allContacts"
-        :key="index"
-        class="w-full  border-b-4 border-black"
-      >
-        <div class="contactInfoContainer  bg-violet-700 flex flex-col md:flex-row gap-4 md:gap-0 items-center justify-between   ">
+    <h1 class="bg-red text-2xl">
+      show all tests
+    </h1>
+    <p>Lorem ipsum dolor sit.</p>
+    <p>Name:{{ allContacts[0].name }} -- Phone:{{ allContacts[0].phone }}</p>
+
+    <ul class="flex items-center  flex-col  ">
+      <li v-for="(item, index) in allContacts" :key="index" class="w-full  border-b-4 border-black">
+        <div
+          class="contactInfoContainer  bg-violet-700 flex flex-col md:flex-row gap-4 md:gap-0 items-center justify-between   ">
           <div class="contatInfo w-full px-8 flex flex-col items-center sm:items-start py-2 lg:items-start lg:py-0">
             <p>Name : <span class="font-bold text-black ">{{ item.fullname }}</span></p>
             <p class="flex items-center gap-4 justify-center md:justify-start">
               <!-- {{ formatPhone(item.phoneNumber) }}  -->
-              {{ item.phoneNumber }} 
-
-
+              {{ item.phoneNumber }}
             </p>
             <!-- <v-btn icon="mdi-flag"></v-btn> -->
             <!-- Iconify library used -->
           </div>
           <div class="contactControllButtons flex gap-4 px-4">
-            <v-btn
-              class="bg-warning px-6 "
-              variant="contained"
-            >
+            <v-btn class="bg-warning px-6 " variant="contained">
               Edit
             </v-btn>
 
-            <v-btn
-              class="bg-red  "
-              variant="contained"
-            >
+            <v-btn class="bg-red  " variant="contained">
               Delete
             </v-btn>
           </div>
@@ -70,6 +59,4 @@ contactStore.getAllContacts()
 // const allContacts = contactsStore.state();
 // alert('qweqw')
 </script>
-<style scoped>
-
-</style>
+<style scoped></style>
