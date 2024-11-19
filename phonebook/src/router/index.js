@@ -8,10 +8,34 @@
 import { createRouter, createWebHistory } from 'vue-router/auto'
 import { setupLayouts } from 'virtual:generated-layouts'
 import { routes } from 'vue-router/auto-routes'
+import showAll from '@/pages/showAll.vue'
+import addContact from '@/pages/addContact.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
-  routes: setupLayouts(routes),
+  routes: [
+    {
+      path: '/',
+      name: 'home',
+      component: showAll,
+      alias: ['/dashboard','/contacts','/all'],   // Alias for the /home route
+
+    },
+    {
+      path: '/add',
+      name: 'addContact',
+      component: addContact,
+      alias: '/create',   // Alias for the /home route
+
+    },
+    
+    // ,
+    // {
+    //   path: '/add',
+    //   name: 'add',
+    //   component: addContact,
+    // },
+  ],
 })
 
 // Workaround for https://github.com/vitejs/vite/issues/11804
