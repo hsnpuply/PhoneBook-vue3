@@ -24,15 +24,7 @@ export const useContactStore = defineStore('app', {
     
     async addContact(contact) {
       this.contacts.push(contact)
-      // const response = await fetch('http://localhost:3001/contacts', {
-      //   method: 'POST',
-      //   headers: {
-      //     'Content-Type': 'application/json',
-      //   },
-      //   body: JSON.stringify(contact),
-      // })
-      // const data = await response.json();
-      // this.contacts.push(data);
+
     },
 
     async deleteContact(id) {
@@ -40,10 +32,6 @@ export const useContactStore = defineStore('app', {
       const temp = this.contacts.filter((contact) => contact.id !== id);
       this.contacts = temp;
 
-      
-      // const response = await fetch(`http://localhost:3001/contacts/${id}`, {
-      //   method:'delete'
-      // })
     }
   }
 })

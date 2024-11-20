@@ -2,6 +2,21 @@
   <h2 class="text-center my-4 bg-green text-2xl ">
     ثبت مخاطب جدید
   </h2>
+  <v-col class="flex bg-green-500/90 items-center justify-center">
+    <router-link
+      to="/"
+      class=""
+    >
+      <v-btn
+        color="black"
+      >
+        <v-icon left>
+          mdi-plus
+        </v-icon>
+        نمایش مخاطبین
+      </v-btn>
+    </router-link>
+  </v-col>
   <div class="bg-black">
     <form @submit.prevent="submitData()">
       <v-text-field
@@ -34,16 +49,24 @@
 
       <v-btn
         class="bg-info"
-        @click="handleReset"
+        @click="handleReset()"
       >
         clear
       </v-btn>
     </form>
-    <v-btn @click="addData(allContactInfo)">Fake add</v-btn>
+    <v-btn @click="addData(allContactInfo)">Fake Data ( Null )</v-btn>
   </div>
   <ul>
-    <li v-for="(item) in contactsStore.getContacts" :key="item.id">
+    <li v-for="(item,index) in contactsStore.getContacts" :key="index">
     {{ item.fullname }} - {{ item.phoneNumber }} - {{ item.selectedDate}} - {{ item.isCoworker ? 'بله' : 'خیر' }}
+    <br>
+    <v-btn
+              variant="outlined"
+              color="red"
+              @click="deleteContact(item.id)"
+            >
+              حذف
+            </v-btn>
     </li>
   </ul>
 </template>
@@ -70,6 +93,7 @@ const addData = (fakeData)=>{
 
 
 const allContactInfo = computed(() => ({
+  id:contactsStore.contacts.length + 1,
   fullname: fullname.value,
   phoneNumber: phoneNumber.value,
   selectedDate: selectedDate.value,
@@ -78,9 +102,8 @@ const allContactInfo = computed(() => ({
 }))
 
 const submitData = () => {
-  console.log(allContactInfo.value)
   contactsStore.addContact(allContactInfo.value)
-  console.log(contactsStore.contacts);
+  console.log(contactsStore.contacts[contactsStore.contacts.length - 1]);
 
   handleReset()
 
@@ -100,6 +123,13 @@ const submitMyForm = () => {
 const AllContacts = ref([
 
 ])
+
+const deleteContact = async (id) => {
+      await contactsStore.deleteContact(id);
+      console.log('مخاطب' + contactsStore.contacts[id].fullname + 'با موفقیت حذف شد');
+      // console.log( contactsStore.contacts[contactsStore.contacts.length ]);
+
+    };
 
 </script>
 <style scoped>
