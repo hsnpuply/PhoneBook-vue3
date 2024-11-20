@@ -73,6 +73,7 @@
                   text="ویرایش"
                   variant="flat"
                   v-bind="activatorProps"
+                  @click="openEditDialog(item)"
                 />
               </template>
 
@@ -88,8 +89,8 @@
                       sm="6"
                     >
                       <v-text-field
+                        v-model="selectedContact.fullname"
                         label="Full name*"
-                        v-model="item.fullname"
                         required
                       />
                     </v-col>
@@ -100,16 +101,31 @@
                       sm="6"
                     >
                       <v-text-field
+                        v-model="selectedContact.phoneNumber"
                         hint="شماره تلفن را وارد کنید"
                         label="phone number"
                       />
                     </v-col>
                     <v-col cols="8">
                       <v-text-field
-                        v-model="selectedDate"
+                        v-model="selectedContact.selectedDate"
                         type="date"
                         label="انتخاب تاریخ تولد"
                       />
+                    </v-col>
+
+                    <v-col cols="8">
+                      <v-switch
+                        v-model="selectedContact.isCoworker"
+                        color="primary"
+                        label="همکار"
+                      />
+                    </v-col >
+                    <v-col cols="8" class="mb-4 ">
+                      <v-row class="gap-4">
+                        <v-btn variant="flat" color="green">ثبت تغییرات</v-btn>
+                        <v-btn variant="flat" color="red">انصراف</v-btn>
+                      </v-row>
                     </v-col>
                   </v-row>
                 </v-card-text>
@@ -131,9 +147,10 @@ import { useContactStore } from '../stores/contacts.js';
 import { Icon } from '@iconify/vue';
 import { ref   } from 'vue'
 
-const contactsStore = useContactStore();
-const dialog = ref(false)
+const selectedContact = ref({});
+const dialog = ref(false);
 
+const contactsStore = useContactStore();
 // contactsStore.getAllContacts() 
 const allContacts = contactsStore.getContacts
 const contact_state = contactsStore.contacts
@@ -143,10 +160,17 @@ const contact_state = contactsStore.contacts
 // const deleteContact = (id)=>{
 //   contactStore.deleteContact(id)
 // }
-const deleteContact = async (id) => {
-      await contactsStore.deleteContact(id);
-    };
+const deleteContact =  (id) => {
+       contactsStore.deleteContact(id);
+    };  
 console.log(contact_state);
+
+const openEditDialog = (item) => {
+  selectedContact.value = { ...item };
+  dialog.value = true; 
+  console.log(selectedContact.value)``
+};
+
 
 </script>
 <style scoped></style>
