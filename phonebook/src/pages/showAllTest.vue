@@ -126,21 +126,23 @@
 <script setup>
 import { useContactStore } from '../stores/contacts.js';
 import { Icon } from '@iconify/vue';
-import { ref } from 'vue'
-
-const dialog = ref(false)
+import { ref   } from 'vue'
 
 const contactStore = useContactStore();
+const dialog = ref(false)
 
-
-
-
-const allContacts = contactStore.getContacts
 contactStore.getAllContacts() 
+const allContacts = contactStore.getContacts
 const contact_state = contactStore.contacts
-const deleteContact = (id)=>{
-  contactStore.deleteContact(id)
-}
+
+
+
+// const deleteContact = (id)=>{
+//   contactStore.deleteContact(id)
+// }
+const deleteContact = async (id) => {
+      await contactStore.deleteContact(id);
+    };
 console.log(contact_state);
 
 </script>

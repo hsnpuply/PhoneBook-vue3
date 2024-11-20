@@ -39,7 +39,13 @@
         clear
       </v-btn>
     </form>
+    <v-btn @click="addData(allContactInfo)">Fake add</v-btn>
   </div>
+  <ul>
+    <li v-for="(item) in contactsStore.getContacts" :key="item.id">
+    {{ item.fullname }} - {{ item.phoneNumber }} - {{ item.selectedDate}} - {{ item.isCoworker ? 'بله' : 'خیر' }}
+    </li>
+  </ul>
 </template>
 
 <script setup>
@@ -56,6 +62,11 @@ const phoneNumber = ref('')
 const selectedDate = ref('');
 const isCoworker = ref(false);
 
+
+const addData = (fakeData)=>{
+  contactsStore.addContact(fakeData)
+  console.log(fakeData)
+}
 
 
 const allContactInfo = computed(() => ({
