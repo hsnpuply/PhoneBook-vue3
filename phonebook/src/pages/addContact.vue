@@ -4,16 +4,38 @@
   </h2>
   <div class="bg-black">
     <form @submit.prevent="submitData()">
-      <v-text-field v-model="fullname" label="نام و نام خانوادگی" :label-size="42" />
+      <v-text-field
+        v-model="fullname"
+        label="نام و نام خانوادگی"
+        :label-size="42"
+      />
 
-      <v-text-field v-model="phoneNumber" label="شماره تلفن" />
+      <v-text-field
+        v-model="phoneNumber"
+        label="شماره تلفن"
+      />
 
-      <v-text-field v-model="selectedDate" type="date" label="انتخاب تاریخ تولد" />
-      <v-btn class="me-4 bg-success" type="submit">
+      <v-text-field
+        v-model="selectedDate"
+        type="date"
+        label="انتخاب تاریخ تولد"
+      />
+      <v-switch
+        color="primary"
+        label="همکار"
+        v-model="isCoworker"
+      />
+      <v-btn
+        class="me-4 bg-success"
+        type="submit"
+      >
         submit
       </v-btn>
 
-      <v-btn class="bg-info" @click="handleReset">
+      <v-btn
+        class="bg-info"
+        @click="handleReset"
+      >
         clear
       </v-btn>
     </form>
@@ -32,11 +54,16 @@ const contactsStore = useContactStore();
 const fullname = ref('')
 const phoneNumber = ref('')
 const selectedDate = ref('');
+const isCoworker = ref(false);
+
+
 
 const allContactInfo = computed(() => ({
   fullname: fullname.value,
   phoneNumber: phoneNumber.value,
-  selectedDate: selectedDate.value
+  selectedDate: selectedDate.value,
+  isCoworker: isCoworker.value
+
 }))
 
 const submitData = () => {
@@ -44,16 +71,19 @@ const submitData = () => {
   contactsStore.addContact(allContactInfo.value)
   console.log(contactsStore.contacts);
 
+  handleReset()
+
 }
 
 const handleReset = () => {
   fullname.value = ''
   phoneNumber.value = ''
   selectedDate.value = ''
+  isCoworker.value = false
 }
 
 const submitMyForm = () => {
-  alert(fullname.value + '\n' + phoneNumber.value + '\n' + selectedDate.value)
+  alert(fullname.value + '\n' + phoneNumber.value + '\n' + selectedDate.value + '\n hamkar:' + isCoworker.value)
   handleReset()
 }
 const AllContacts = ref([

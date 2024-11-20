@@ -34,6 +34,13 @@ export const useContactStore = defineStore('app', {
       const data = await response.json();
       this.contacts.push(data);
       alert(this.contacts)
+    },
+
+    async deleteContact(id) {
+      this.contacts = this.contacts.filter((contact) => contact.id !== id)
+      const response = await fetch(`http://localhost:3001/contacts/${id}`, {
+        method:'delete'
+      })
     }
   }
 })
