@@ -10,9 +10,7 @@
       <v-btn
         color="black"
       >
-        <v-icon left>
-          mdi-plus
-        </v-icon>
+
         نمایش مخاطبین
       </v-btn>
     </router-link>
@@ -127,7 +125,6 @@ const AllContacts = ref([
 const deleteContact = async (id) => {
   console.log('مخاطب' + contactsStore.contacts[id - 1].fullname + 'با موفقیت حذف شد');
   contactsStore.deleteContact(id);
-      // console.log( contactsStore.contacts[contactsStore.contacts.length ]);
 
     };
 

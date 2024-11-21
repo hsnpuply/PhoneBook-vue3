@@ -9,7 +9,6 @@
     >
       <v-btn
         color="green"
-        @click="handleAddContact"
       >
         <v-icon left>
           mdi-plus
@@ -127,6 +126,7 @@
                     >
                       <v-row class="gap-4">
                         <v-btn
+                          :loading="loading"
                           variant="flat"
                           color="green"
                           @click="UpdateDialog(selectedContact.id)"
@@ -185,11 +185,18 @@ const openEditDialog = (item) => {
   dialog.value = true; 
   console.log(selectedContact.value);
 };
-
+const loading = ref(false)
 
 
 const  UpdateDialog =(id)=> {
-  contactsStore.updateContact(id, selectedContact.value);
+  loading.value = true
+  setTimeout(() => {
+    contactsStore.updateContact(id, selectedContact.value);
+    loading.value = false
+  }, 1500);
+  setTimeout(() => {
+  dialog.value= false
+  }, 1700);
 }
 
 const cancelDialog = ()=>{
