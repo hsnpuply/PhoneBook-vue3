@@ -16,6 +16,7 @@ export default defineConfig({
   plugins: [
     VueRouter(),
     Layouts(),
+    
     Vue({
       template: { transformAssetUrls }
     }),
@@ -51,6 +52,13 @@ export default defineConfig({
     alias: {
       '@': fileURLToPath(new URL('./src', import.meta.url))
     },
+      mainFields: [
+        'browser',
+        'module',
+        'main',
+        'jsnext:main',
+        'jsnext'
+      ],
     extensions: [
       '.js',
       '.json',

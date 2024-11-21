@@ -158,7 +158,6 @@
   <div class="flex items-center justify-center pt-8">
     <Form
       @submit="onSubmit"
-      
     >
       <label for="email" />
       <Field
@@ -177,14 +176,18 @@
       >
         Sign up for newsletter
       </v-btn>
+      hi
+      <date-picker v-model="date"></date-picker>
+
     </Form>
   </div>
 </template>
 
 <script setup>
+  import DatePicker from 'vue3-persian-datetime-picker'
+
 import { ref   } from 'vue'
 import { Form, Field , ErrorMessage  } from 'vee-validate';
-
 
 import * as yup from 'yup';
 
