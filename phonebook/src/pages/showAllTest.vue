@@ -120,11 +120,26 @@
                         color="primary"
                         label="همکار"
                       />
-                    </v-col >
-                    <v-col cols="8" class="mb-4 ">
+                    </v-col>
+                    <v-col
+                      cols="8"
+                      class="mb-4 "
+                    >
                       <v-row class="gap-4">
-                        <v-btn variant="flat" color="green">ثبت تغییرات</v-btn>
-                        <v-btn variant="flat" color="red">انصراف</v-btn>
+                        <v-btn
+                          variant="flat"
+                          color="green"
+                          @click="UpdateDialog(selectedContact.id)"
+                        >
+                          ثبت تغییرات
+                        </v-btn>
+                        <v-btn
+                          variant="flat"
+                          color="red"
+                          @click="cancelDialog()"
+                        >
+                          انصراف
+                        </v-btn>
                       </v-row>
                     </v-col>
                   </v-row>
@@ -168,9 +183,17 @@ console.log(contact_state);
 const openEditDialog = (item) => {
   selectedContact.value = { ...item };
   dialog.value = true; 
-  console.log(selectedContact.value)``
+  console.log(selectedContact.value);
 };
 
 
+
+const  UpdateDialog =(id)=> {
+  contactsStore.updateContact(id, selectedContact.value);
+}
+
+const cancelDialog = ()=>{
+  dialog.value = false;
+}
 </script>
 <style scoped></style>

@@ -125,8 +125,8 @@ const AllContacts = ref([
 ])
 
 const deleteContact = async (id) => {
-      await contactsStore.deleteContact(id);
-      console.log('مخاطب' + contactsStore.contacts[id].fullname + 'با موفقیت حذف شد');
+  console.log('مخاطب' + contactsStore.contacts[id - 1].fullname + 'با موفقیت حذف شد');
+  contactsStore.deleteContact(id);
       // console.log( contactsStore.contacts[contactsStore.contacts.length ]);
 
     };
