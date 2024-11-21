@@ -97,7 +97,7 @@
                     <v-col
                       cols="12"
                       md="4"
-                      sm="6"
+                      sm="6"  
                     >
                       <v-text-field
                         v-model="selectedContact.phoneNumber"
@@ -155,15 +155,73 @@
       </tbody>
     </v-table>
   </div>
+  <div class="flex items-center justify-center pt-8">
+    <Form
+      @submit="onSubmit"
+      
+    >
+      <label for="email" />
+      <Field
+        type="email"
+        name="email"
+        :rules="validateEmail"
+        class="border-2 border-white bg-white p-[7px]"
+        placeholder="email"
+      />
+      <ErrorMessage name="email" />
+
+      <v-btn
+        variant="flat"
+        type="submit"
+        color="green"
+      >
+        Sign up for newsletter
+      </v-btn>
+    </Form>
+  </div>
 </template>
 
 <script setup>
+import { ref   } from 'vue'
+import { Form, Field , ErrorMessage  } from 'vee-validate';
+
+
+import * as yup from 'yup';
+
+const schema = yup.object({
+  email: yup.string().email().required(),
+  name: yup.string().required(),
+});
+
 import { useContactStore } from '../stores/contacts.js';
 import { Icon } from '@iconify/vue';
-import { ref   } from 'vue'
+import { email } from '@vee-validate/rules';
+import { fa } from 'vuetify/locale';
 
 const selectedContact = ref({});
 const dialog = ref(false);
+
+const validateEmail=(value)=> {
+      // if the field is empty
+      if (!value) {
+        return 'This field is required';
+      }
+      // if the field is not a valid email
+      const regex = /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i;
+      if (!regex.test(value)) {
+        return 'This field must be a valid email';
+      }
+      // All is good
+      return true;
+    }
+
+const onSubmit =(values)=> {
+      console.log('Form submitted!');
+      console.log(JSON.stringify(values, null, 2));
+      // console.log(values);
+      
+
+    }
 
 const contactsStore = useContactStore();
 // contactsStore.getAllContacts() 
