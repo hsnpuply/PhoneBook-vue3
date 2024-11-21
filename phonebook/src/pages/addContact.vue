@@ -28,11 +28,13 @@
         label="شماره تلفن"
       />
 
-      <v-text-field
+      <!-- <v-text-field
         v-model="selectedDate"
         type="date"
         label="انتخاب تاریخ تولد"
-      />
+      /> -->
+      <date-picker v-model="selectedDate" ></date-picker>
+
       <v-switch
         color="primary"
         label="همکار"
@@ -70,6 +72,8 @@
 </template>
 
 <script setup>
+  import DatePicker from 'vue3-persian-datetime-picker'
+
 import { useContactStore } from '../stores/contacts.js';
 import { ref, computed } from 'vue'
 import { Icon } from '@iconify/vue';
@@ -82,6 +86,8 @@ const fullname = ref('')
 const phoneNumber = ref('')
 const selectedDate = ref('');
 const isCoworker = ref(false);
+
+const shamsiDate=ref('')
 
 
 const addData = (fakeData)=>{
