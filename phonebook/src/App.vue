@@ -1,5 +1,5 @@
 <template>
-  <v-app>
+  <v-app class="bg-gray-800">
     <v-main>
       <router-view />
     </v-main>
@@ -7,5 +7,5 @@
 </template>
 
 <script setup>
-  //
+//
 </script>
