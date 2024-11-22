@@ -63,7 +63,6 @@
                     </v-col>
                     <v-col cols="8">
                       <v-text-field v-model="selectedContact.selectedDate" type="date" label="انتخاب تاریخ تولد" />
-                      qweqw
                     </v-col>
 
                     <v-col cols="8">
