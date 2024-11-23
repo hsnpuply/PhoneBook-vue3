@@ -60,6 +60,7 @@
               v-model="dialog"
               max-width="800"
               class="bg-teal-400/5 "
+              :persistent="changePresistance"
             >
               <template
                 #activator="{ props: activatorProps }"
@@ -79,12 +80,15 @@
                 :title="dialogMode === 'register' ?'فرم ثبت مخاطب' : 'فرم ویرایش مخاطب' "
                 class="items-end "
               >
-                <v-card-text class="text-right ">
-                  <v-row class="bg-red-500/50 w-full  " >
+                <v-card-text class="text-right bg-gray-700 w-full  ">
+                  <v-row
+                    class=" justify-end   "
+                  >
                     <v-col
                       cols="12"
                       md="4"
                       sm="6"
+                      class=""
                     >
                       <v-text-field
                         :v-model="dialogMode === 'edit' ? selectedContact.phoneNumber : phoneNumber"
@@ -110,19 +114,33 @@
                       />
                     </v-col>
 
-                    <v-col cols="8">
+                    <v-col
+                      cols="8"
+                      class="d-flex justify-end"
+                    >
                       <v-switch
                       :v-model="dialogMode === 'edit' ? selectedContact.isCoworker : isCoworker"
                         color="primary"
-                        label="همکار"
-                      />
+                      >
+                        <template #label>
+                          <span class="text-gray-100 text-lg font-bold">همکار</span>
+                        </template>
+                      </v-switch>
                     </v-col>
                   </v-row>
                   <v-col
-                    cols="8"
-                    class="mb-4 "
+                    cols="12"
+                    class="mb-2 flex justify-start  "
                   >
-                    <v-row class="gap-4">
+                    <v-row class="gap-4 justify-end">
+                      <v-btn
+                        variant="flat"
+                        color="red"
+                        @click="cancelDialog()"
+                      >
+                        انصراف
+                      </v-btn>
+
                       <v-btn
                         v-if="dialogMode === 'edit'"
                         :loading="loading"
@@ -141,13 +159,6 @@
                         @click="submitData(item)"
                       >
                         ثبت مخاطب
-                      </v-btn>
-                      <v-btn
-                        variant="flat"
-                        color="red"
-                        @click="cancelDialog()"
-                      >
-                        انصراف
                       </v-btn>
                     </v-row>
                   </v-col>
@@ -262,10 +273,7 @@ const showAlert = (id) => {
   showConfirmButton: false,
   timer: 2500,
   timerProgressBar: true,
-  didOpen: (toast) => {
-    toast.onmouseenter = Swal.stopTimer;
-    toast.onmouseleave = Swal.resumeTimer;
-  }
+
 });
 Toast.fire({
   icon: "success",
@@ -289,6 +297,7 @@ import { fa } from 'vuetify/locale';
 
 const selectedContact = ref({});
 const dialog = ref(false);
+const changePresistance= ref(false)
 
 const validateEmail = (value) => {
   if (!value) {
@@ -331,18 +340,16 @@ const openMyDialog = (item,mode) => {
   selectedContact.value = { ...item };
   dialog.value = true;
   console.log(selectedContact.value);
-<<<<<<< HEAD
   changePresistance.value = false
 
 
-=======
->>>>>>> parent of 2b4ac30 (fix modal bug + add persistent for edit modals)
 };
 const loading = ref(false)
 
 
 const UpdateDialog = (id) => {
   loading.value = true
+  changePresistance.value = true 
   setTimeout(() => {
     contactsStore.updateContact(id, selectedContact.value);
     loading.value = false
