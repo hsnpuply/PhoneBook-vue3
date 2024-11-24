@@ -56,7 +56,18 @@ import { fa } from 'vuetify/locale';
 
 const selectedContact = ref({});
 const dialog = ref(false);
+const dialogEditState=ref(false)
+const dialogRegisterState=ref(false)
 const changePresistance= ref(false)
+
+const toggleEditDialog = () => {
+  dialogEditState.value = !dialogEditState.value;
+  console.log(dialogEditState.value);
+};
+const toggleRegisterDialog = () => {
+  dialogRegisterState.value = !dialogRegisterState.value;
+  console.log(dialogRegisterState.value);
+};
 
 const validateEmail = (value) => {
   if (!value) {
@@ -69,11 +80,7 @@ const validateEmail = (value) => {
   return true;
 }
 
-const onSubmit = (values) => {
-  // console.log('Form submitted!');
-  // console.log(JSON.stringify(values, null, 2));
-  // console.log(values);
-}
+
 
 const confirmDelete = ref(false)
 
@@ -92,8 +99,7 @@ const deleteContact = (id) => {
   contactsStore.deleteContact(id);
 };
 
-const openMyDialog = (item,mode) => {
-  dialogMode.value = mode 
+const openMyDialog = (item) => {
   selectedContact.value = { ...item };
   dialog.value = true;
   // console.log(selectedContact.value);
@@ -160,8 +166,6 @@ const submitData = () => {
   
 }
 
-
-
 </script>
 <template>
   <h2 class="text-center my-4 bg-green text-3xl text-black">
@@ -208,10 +212,17 @@ const submitData = () => {
             >
               حذف
             </v-btn>
+            <v-btn
+              variant="flat"
+              color="blue"
+              prepend-icon="mdi-account"
+              @click="toggleEditDialog"
+            >
+              ویرایش
+            </v-btn>
             <Forms
-              title="Random"
-              :change-presistance="changePresistance"
-              :open-my-dialog="openMyDialog(item,'edit')"
+              v-model:model-state="dialogEditState"
+              title="ویرایش مخاطب" 
               :phone-number="item.phoneNumber"
               :fullname="item.fullname"
               :is-coworker="item.isCoworker"
@@ -228,15 +239,20 @@ const submitData = () => {
   </div>
   <div class="addNewContact w-full flex justify-end py-5 px-3">
     <v-btn
-    color="green"
-    size="large"
-    @click="openMyDialog(undefined,'register')"
-  >
-    <v-icon left>
-      mdi-plus
-    </v-icon>
-    ثبت مخاطب
-  </v-btn>
+      color="green"
+      size="large"
+      @click="toggleRegisterDialog"
+    >
+      <v-icon left>
+        mdi-plus
+      </v-icon>
+      ثبت مخاطب
+    </v-btn>
+    <Forms
+      v-model:model-state="dialogRegisterState"
+      title="ثبت مخاطب" 
+
+    />
   </div>
 </template>
 

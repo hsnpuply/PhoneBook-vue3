@@ -1,23 +1,36 @@
+<script setup>
+import {ref , defineProps, defineEmits } from 'vue';
+const props = defineProps({
+  title: String,
+  changePresistance: Boolean,
+  modelState:Boolean,
+  phoneModel:String,
+  fullname:String,
+  birthDate:String,
+  isCoworker:Boolean,
+  openMyDialog : Function,
+  UpdateDialog:Function,
+  submitData:Function,
+})
+
+const emit = defineEmits();
+
+
+const cancelDialog = () => {
+  emit('update:modelState', false);
+  console.log(props.modelState);
+  
+};
+
+</script>
 <template>
   <v-dialog
-    v-model="dialog"
+    v-model="props.modelState"
     max-width="800"
-    class="bg-teal-400/5 "
+    class="bg-teal-400/5"
   >
-  <!-- :persistent="changePresistance" -->
+    <!-- :persistent="changePresistance" -->
 
-    <template
-      #activator="{ props: activatorProps }"
-    >
-      <v-btn
-        class="text-none font-weight-regular"
-        prepend-icon="mdi-account"
-        text="test"
-        variant="flat"
-        v-bind="activatorProps"
-        @click="openMyDialog(item,type)"
-      />
-    </template>
 
     <v-card
       prepend-icon="mdi-account"
@@ -110,25 +123,6 @@
     </v-card>
   </v-dialog>
 </template>
-<script setup>
-import {ref} from 'vue';
-const dialog=ref(false)
-const props = defineProps({
-  title: String,
-  changePresistance: Boolean,
-  phoneModel:String,
-  fullname:String,
-  birthDate:String,
-  isCoworker:Boolean,
-  openMyDialog : Function,
-  UpdateDialog:Function,
-  submitData:Function,
-})
 
-const cancelDialog = () => {
-  dialog.value = false;
-}
-
-</script>
 <style scoped>
 </style>
