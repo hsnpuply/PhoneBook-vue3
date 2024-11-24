@@ -1,5 +1,6 @@
 <script setup>
 import {ref , defineProps, defineEmits } from 'vue';
+
 import { bool } from 'yup';
 const props = defineProps({
   title: String,
@@ -15,6 +16,11 @@ const props = defineProps({
   editMode:Boolean,
   registerMode:Boolean
 })
+const phoneModel = ref(props.phoneModel || '');
+const fullname = ref(props.fullname || '');
+const birthDate = ref(props.birthDate || '');
+const isCoworker = ref(props.isCoworker || false);
+
 
 const emit = defineEmits();
 
@@ -51,7 +57,7 @@ const cancelDialog = () => {
             class=""
           >
             <v-text-field
-              :v-model="props.phoneModel"
+              v-model="phoneModel"
               label="شماره تلفن"
               :placeholder="props.phoneModel"
             />
@@ -63,7 +69,7 @@ const cancelDialog = () => {
             sm="6"
           >
             <v-text-field
-              :v-model="props.fullname"
+              v-model="fullname"
               label="نام و نام خانوادگی"
               :placeholder="props.fullname"
 
@@ -71,7 +77,7 @@ const cancelDialog = () => {
           </v-col>
           <v-col cols="8">
             <v-text-field
-              :v-model="props.birthDate"
+              v-model="birthDate"
               type="date"
               label="انتخاب تاریخ تولد"
             />
@@ -82,7 +88,7 @@ const cancelDialog = () => {
             class="d-flex justify-end"
           >
             <v-switch
-              :v-model="props.isCoworker"
+              v-model="isCoworker"
               color="primary"
             >
               <template #label>

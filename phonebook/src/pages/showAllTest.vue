@@ -66,7 +66,7 @@ const dialogEditState=ref(false)
 const dialogRegisterState=ref(false)
 const changePresistance= ref(false)
 
-const toggleEditDialog = () => {
+const toggleEditDialog = (item) => {
   dialogEditState.value = !dialogEditState.value;
   console.log(dialogEditState.value);
 };
@@ -201,8 +201,8 @@ const submitData = () => {
       </thead>
       <tbody>
         <tr
-          v-for="item in contactsStore.contacts"
-          :key="item.id"
+          v-for="(item,index) in contactsStore.contacts"
+          :key="index"
           class="text-right bg-blue-950 text-lg cursor-pointer hover:bg-blue-900 select-none"
           @dblclick="toggleEditDialog"
         >
@@ -222,15 +222,15 @@ const submitData = () => {
               variant="flat"
               color="blue"
               prepend-icon="mdi-account"
-              @click="toggleEditDialog"
+              @click="toggleEditDialog(item)"
             >
-              ویرایش
+              ویرایش {{ index }}
             </v-btn>
             <Forms
               v-model:model-state="dialogEditState"
               title="ویرایش مخاطب" 
               :phoneModel="item.phoneNumber"
-              :fullname="item.full"
+              :fullname="item.fullname"
               :isCowerker="item.isCoworker"
               :birthDate="item.selectedDate"
               :edit-mode="true"
