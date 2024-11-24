@@ -54,7 +54,13 @@ import { Icon } from '@iconify/vue';
 import { email } from '@vee-validate/rules';
 import { fa } from 'vuetify/locale';
 
-const selectedContact = ref({});
+const selectedContact = ref({
+  id: '100',
+  fullname:'a',
+  phoneNumber:'22',
+  isCoworker:true,
+  selectedDate:'22-22-44'
+});
 const dialog = ref(false);
 const dialogEditState=ref(false)
 const dialogRegisterState=ref(false)
@@ -198,7 +204,7 @@ const submitData = () => {
           v-for="item in contactsStore.contacts"
           :key="item.id"
           class="text-right bg-blue-950 text-lg cursor-pointer hover:bg-blue-900 select-none"
-          @dblclick="openMyDialog(item,'edit')"
+          @dblclick="toggleEditDialog"
         >
           <td
             v-if="contact_state.length > 0"
@@ -223,10 +229,11 @@ const submitData = () => {
             <Forms
               v-model:model-state="dialogEditState"
               title="ویرایش مخاطب" 
-              :phone-number="item.phoneNumber"
-              :fullname="item.fullname"
-              :is-coworker="item.isCoworker"
-              :birth-date="item.selectedDate"
+              :phoneModel="item.phoneNumber"
+              :fullname="item.full"
+              :isCowerker="item.isCoworker"
+              :birthDate="item.selectedDate"
+              :edit-mode="true"
             />
           </td>
           <td>{{ item.isCoworker ? 'بله' : 'خیر' }}</td>
@@ -251,6 +258,7 @@ const submitData = () => {
     <Forms
       v-model:model-state="dialogRegisterState"
       title="ثبت مخاطب" 
+      :register-mode="true"
 
     />
   </div>

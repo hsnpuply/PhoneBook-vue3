@@ -1,5 +1,6 @@
 <script setup>
 import {ref , defineProps, defineEmits } from 'vue';
+import { bool } from 'yup';
 const props = defineProps({
   title: String,
   changePresistance: Boolean,
@@ -11,6 +12,8 @@ const props = defineProps({
   openMyDialog : Function,
   UpdateDialog:Function,
   submitData:Function,
+  editMode:Boolean,
+  registerMode:Boolean
 })
 
 const emit = defineEmits();
@@ -50,6 +53,7 @@ const cancelDialog = () => {
             <v-text-field
               :v-model="props.phoneModel"
               label="شماره تلفن"
+              :placeholder="props.phoneModel"
             />
           </v-col>
 
@@ -61,6 +65,8 @@ const cancelDialog = () => {
             <v-text-field
               :v-model="props.fullname"
               label="نام و نام خانوادگی"
+              :placeholder="props.fullname"
+
             />
           </v-col>
           <v-col cols="8">
@@ -99,7 +105,7 @@ const cancelDialog = () => {
             </v-btn>
 
             <v-btn
-              v-if="dialogMode === 'edit'"
+              v-if="props.editMode"
               :loading="loading"
               variant="flat"
               color="green"
@@ -109,7 +115,7 @@ const cancelDialog = () => {
             </v-btn>
 
             <v-btn
-              v-if="dialogMode === 'register'"
+              v-if="props.registerMode"
               :loading="loading"
               variant="flat"
               color="green"
