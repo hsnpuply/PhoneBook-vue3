@@ -10,6 +10,7 @@ import { setupLayouts } from 'virtual:generated-layouts'
 import { routes } from 'vue-router/auto-routes'
 import showAll from '@/pages/showAllTest.vue'
 import addContact from '@/pages/addContact.vue'
+import Reg_edit from '@/pages/reg_edit.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -21,6 +22,13 @@ const router = createRouter({
       alias: ['/dashboard','/all'],   // Alias for the /home route
 
     },
+    // {
+    //   path: '/',
+    //   name: 'home',
+    //   component: Reg_edit,
+    //   alias: ['/dashboard','/all'],   // Alias for the /home route
+
+    // },
     {
       path: '/add',
       name: 'addContact',
