@@ -1,6 +1,5 @@
 <script setup>
-import {ref , defineProps, defineEmits } from 'vue';
-
+import {ref , defineProps, defineEmits , watch } from 'vue';
 import { bool } from 'yup';
 const props = defineProps({
   title: String,
@@ -22,6 +21,22 @@ const birthDate = ref(props.birthDate || '');
 const isCoworker = ref(props.isCoworker || false);
 
 
+// Watch for changes in props and update the reactive variables
+watch(() => props.phoneModel, (newVal) => {
+  phoneModel.value = newVal;
+});
+
+watch(() => props.fullname, (newVal) => {
+  fullname.value = newVal;
+});
+
+watch(() => props.birthDate, (newVal) => {
+  birthDate.value = newVal;
+});
+
+watch(() => props.isCoworker, (newVal) => {
+  isCoworker.value = newVal;
+});
 const emit = defineEmits();
 
 

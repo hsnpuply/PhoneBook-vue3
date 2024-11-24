@@ -55,11 +55,7 @@ import { email } from '@vee-validate/rules';
 import { fa } from 'vuetify/locale';
 
 const selectedContact = ref({
-  id: '100',
-  fullname:'a',
-  phoneNumber:'22',
-  isCoworker:true,
-  selectedDate:'22-22-44'
+
 });
 const dialog = ref(false);
 const dialogEditState=ref(false)
@@ -67,6 +63,7 @@ const dialogRegisterState=ref(false)
 const changePresistance= ref(false)
 
 const toggleEditDialog = (item) => {
+  selectedContact.value = {...item}
   dialogEditState.value = !dialogEditState.value;
   console.log(dialogEditState.value);
 };
@@ -204,7 +201,7 @@ const submitData = () => {
           v-for="(item,index) in contactsStore.contacts"
           :key="index"
           class="text-right bg-blue-950 text-lg cursor-pointer hover:bg-blue-900 select-none"
-          @dblclick="toggleEditDialog"
+          @dblclick="toggleEditDialog(item)"
         >
           <td
             v-if="contact_state.length > 0"
@@ -229,10 +226,10 @@ const submitData = () => {
             <Forms
               v-model:model-state="dialogEditState"
               title="ویرایش مخاطب" 
-              :phoneModel="item.phoneNumber"
-              :fullname="item.fullname"
-              :isCowerker="item.isCoworker"
-              :birthDate="item.selectedDate"
+              :phoneModel="selectedContact.phoneNumber"
+              :fullname="selectedContact.fullname"
+              :isCowerker="selectedContact.isCoworker"
+              :birthDate="selectedContact.selectedDate"
               :edit-mode="true"
             />
           </td>
