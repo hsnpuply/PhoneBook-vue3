@@ -6,42 +6,42 @@ const dialogMode = ref('')
 
 
 
-const date=ref('')
+const date = ref('')
 
 const showAlert = (id) => {
   Swal.fire({
-  title: "آیا از حذف مخاطب اطمینان دارید؟",
-  text: "اطلاعات حذف شده قابلیت بازیابی ندارند",
-  icon: "warning",
-  showCancelButton: true,
-  confirmButtonColor: "blue",
-  cancelButtonColor: "red",
-  confirmButtonText: "بله، حذف شود",
-  cancelButtonText:"انصراف",
-  customClass:{
-    cancelButton:"text-black text-lg font-semiBold",
-    confirmButton:"text-black text-lg font-semiBold"
-  }
-}).then((result) => {
-  if (result.isConfirmed) {
-    deleteContact(id)
-    // console.log('hazf shod ')
-    const Toast = Swal.mixin({
-  toast: true,
-  position: "top-end",
-  showConfirmButton: false,
-  timer: 2500,
-  timerProgressBar: true,
+    title: "آیا از حذف مخاطب اطمینان دارید؟",
+    text: "اطلاعات حذف شده قابلیت بازیابی ندارند",
+    icon: "warning",
+    showCancelButton: true,
+    confirmButtonColor: "blue",
+    cancelButtonColor: "red",
+    confirmButtonText: "بله، حذف شود",
+    cancelButtonText: "انصراف",
+    customClass: {
+      cancelButton: "text-black text-lg font-semiBold",
+      confirmButton: "text-black text-lg font-semiBold"
+    }
+  }).then((result) => {
+    if (result.isConfirmed) {
+      deleteContact(id)
+      // console.log('hazf shod ')
+      const Toast = Swal.mixin({
+        toast: true,
+        position: "top-end",
+        showConfirmButton: false,
+        timer: 2500,
+        timerProgressBar: true,
 
-});
-Toast.fire({
-  icon: "success",
-  title: "مخاطب با موفقیت حذف شد"
-});
-  }
-});
+      });
+      Toast.fire({
+        icon: "success",
+        title: "مخاطب با موفقیت حذف شد"
+      });
+    }
+  });
 }
-import { ref , computed } from 'vue'
+import { ref, computed } from 'vue'
 import { Form, Field, ErrorMessage } from 'vee-validate';
 import * as yup from 'yup';
 const schema = yup.object({
@@ -59,12 +59,12 @@ const selectedContact = ref({
 
 });
 const dialog = ref(false);
-const dialogEditState=ref(false)
-const dialogRegisterState=ref(false)
-const changePresistance= ref(false)
+const dialogEditState = ref(false)
+const dialogRegisterState = ref(false)
+const changePresistance = ref(false)
 
 const toggleEditDialog = (item) => {
-  selectedContact.value = {...item}
+  selectedContact.value = { ...item }
   dialogEditState.value = !dialogEditState.value;
   console.log(dialogEditState.value);
 };
@@ -93,7 +93,7 @@ const contactsStore = useContactStore();
 const allContacts = contactsStore.getContacts
 const contact_state = contactsStore.contacts
 
-const formDialog= (formType)=>{
+const formDialog = (formType) => {
   const title = "formType."
 }
 
@@ -116,7 +116,7 @@ const loading = ref(false)
 
 const UpdateDialog = (id) => {
   loading.value = true
-  changePresistance.value = true 
+  changePresistance.value = true
   setTimeout(() => {
     contactsStore.updateContact(id, selectedContact.value);
     loading.value = false
@@ -135,7 +135,7 @@ const UpdateDialog = (id) => {
       timerProgressBar: true,
     });
   }, 1700);
-  
+
 
 }
 
@@ -167,7 +167,7 @@ const submitData = () => {
   contactsStore.addContact(allContactInfo.value)
   // console.log(contactsStore.contacts[contactsStore.contacts.length - 1]);
   dialog.value = false
-  
+
 }
 
 </script>
@@ -198,46 +198,22 @@ const submitData = () => {
         </tr>
       </thead>
       <tbody>
-        <tr
-          v-for="(item,index) in contactsStore.contacts"
-          :key="index"
-          class="text-right bg-blue-950 text-lg cursor-pointer hover:bg-blue-900 border-b-4  hover:border-black border-transparent select-none"
-          @click="toggleEditDialog(item)"
-        >
-          <td
-            v-if="contact_state.length > 0"
-            class=" flex justify-end w-full gap-2 "
-          >
-            <v-btn
-              variant="flat"
-              color="red"
-              prepend-icon="mdi-delete"
-              @click="showAlert(item.id)"
-            >
+        <tr v-for="(item, index) in contactsStore.contacts" :key="index"
+          class="text-right  bg-blue-950 text-lg cursor-pointer hover:bg-blue-900 border-b-4  hover:border-black border-transparent select-none "
+          @dblclick="toggleEditDialog(item)">
+          <td v-if="contact_state.length > 0" class=" flex justify-end w-full gap-2 border-none ">
+            <v-btn variant="flat" color="red" prepend-icon="mdi-delete" @click="showAlert(item.id)">
               حذف
             </v-btn>
-            <v-btn
-              variant="flat"
-              color="blue"
-              prepend-icon="mdi-account"
-              @click="toggleEditDialog(item)"
-            >
-              ویرایش {{ index }}
+            <v-btn variant="flat" color="blue" prepend-icon="mdi-account" @click="toggleEditDialog(item)">
+              ویرایش
             </v-btn>
-            <Forms
-              v-model:model-state="dialogEditState"
-              title="ویرایش مخاطب" 
-              :phoneModel="selectedContact.phoneNumber"
-              :fullname="selectedContact.fullname"
-              :isCowerker="selectedContact.isCoworker"
-              :birthDate="selectedContact.selectedDate"
-              :edit-mode="true"
-              :currentData="selectedContact.id"
-              
-            />
+            <Forms v-model:model-state="dialogEditState" title="ویرایش مخاطب" :phoneModel="selectedContact.phoneNumber"
+              :fullname="selectedContact.fullname" :isCoworker="false" :selectedDate="selectedContact.selectedDate"
+              :edit-mode="true" :currentData="selectedContact.id" />
           </td>
           <td>{{ item.isCoworker ? 'بله' : 'خیر' }}</td>
-          <td>{{ moment(item.selectedDate) === false ? 'تاریخ درج نشده' : moment(item.selectedDate).format('jYYYY/jMM/jDD') }}</td>
+          <td>{{ moment(item.selectedDate).format('jYYYY/jMM/jDD') }}</td>
           <td>{{ item.phoneNumber }}</td>
           <td>{{ item.fullname }}</td>
           <td>{{ item.id }}</td>
@@ -246,26 +222,15 @@ const submitData = () => {
     </v-table>
   </div>
   <div class="addNewContact w-full flex justify-end py-5 px-3">
-    <v-btn
-      color="green"
-      size="large"
-      @click="toggleRegisterDialog"
-    >
+    <v-btn color="green" size="large" @click="toggleRegisterDialog">
       <v-icon left>
         mdi-plus
       </v-icon>
       ثبت مخاطب
     </v-btn>
-    <Forms
-      v-model:model-state="dialogRegisterState"
-      title="ثبت مخاطب" 
-      :register-mode="true"
-
-    />
+    <Forms v-model:model-state="dialogRegisterState" title="ثبت مخاطب" :register-mode="true" />
   </div>
 </template>
 
 
-<style scoped>
-
-</style>
+<style scoped></style>
