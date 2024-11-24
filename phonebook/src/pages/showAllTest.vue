@@ -50,6 +50,7 @@ const schema = yup.object({
   password: yup.string().required().min(8),
 });
 import { useContactStore } from '../stores/contacts.js';
+
 import { Icon } from '@iconify/vue';
 import { email } from '@vee-validate/rules';
 import { fa } from 'vuetify/locale';
@@ -200,8 +201,8 @@ const submitData = () => {
         <tr
           v-for="(item,index) in contactsStore.contacts"
           :key="index"
-          class="text-right bg-blue-950 text-lg cursor-pointer hover:bg-blue-900 select-none"
-          @dblclick="toggleEditDialog(item)"
+          class="text-right bg-blue-950 text-lg cursor-pointer hover:bg-blue-900 border-b-4  hover:border-black border-transparent select-none"
+          @click="toggleEditDialog(item)"
         >
           <td
             v-if="contact_state.length > 0"
@@ -231,12 +232,15 @@ const submitData = () => {
               :isCowerker="selectedContact.isCoworker"
               :birthDate="selectedContact.selectedDate"
               :edit-mode="true"
+              :currentData="selectedContact.id"
+              
             />
           </td>
           <td>{{ item.isCoworker ? 'بله' : 'خیر' }}</td>
           <td>{{ moment(item.selectedDate) === false ? 'تاریخ درج نشده' : moment(item.selectedDate).format('jYYYY/jMM/jDD') }}</td>
           <td>{{ item.phoneNumber }}</td>
           <td>{{ item.fullname }}</td>
+          <td>{{ item.id }}</td>
         </tr>
       </tbody>
     </v-table>

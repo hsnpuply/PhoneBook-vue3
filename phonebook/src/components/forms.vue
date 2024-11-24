@@ -1,6 +1,9 @@
 <script setup>
 import {ref , defineProps, defineEmits , watch } from 'vue';
-import { bool } from 'yup';
+import { useContactStore } from '../stores/contacts.js';
+import Swal from "sweetalert2";
+const contactsStore = useContactStore();
+
 const props = defineProps({
   title: String,
   changePresistance: Boolean,
@@ -10,11 +13,14 @@ const props = defineProps({
   birthDate:String,
   isCoworker:Boolean,
   openMyDialog : Function,
-  UpdateDialog:Function,
   submitData:Function,
   editMode:Boolean,
-  registerMode:Boolean
+  registerMode:Boolean,
+  currentData:Object,
+  UpdateDialog:Function
+
 })
+
 const phoneModel = ref(props.phoneModel || '');
 const fullname = ref(props.fullname || '');
 const birthDate = ref(props.birthDate || '');
@@ -45,6 +51,37 @@ const cancelDialog = () => {
   console.log(props.modelState);
   
 };
+const UpdateDialog = (idModel) => {
+  alert(idModel)
+  const updatedContact = {
+    id: props.currentData,
+    phoneNumber: phoneModel.value,
+    fullname: fullname.value,
+    birthDate: birthDate.value,
+    isCoworker: isCoworker.value,
+  };
+  setTimeout(() => {
+    contactsStore.updateContact(idModel, updatedContact);
+    console.log(props.currentData)
+    console.log(updatedContact);
+    
+    emit('update:modelState', false);
+
+  }, 1500);
+  setTimeout(() => {
+    Swal.fire({
+      icon: 'success',
+      title: 'ویرایش مخاطب با موفقیت انجام شد',
+      toast: true,
+      position: 'top-end',
+      showConfirmButton: false,
+      timer: 3000,
+      timerProgressBar: true,
+    });
+  }, 1700);
+  
+
+}
 
 </script>
 <template>
@@ -130,7 +167,7 @@ const cancelDialog = () => {
               :loading="loading"
               variant="flat"
               color="green"
-              @click="UpdateDialog(id)"
+              @click="UpdateDialog(currentData)"
             >
               اعمال تغییرات
             </v-btn>
