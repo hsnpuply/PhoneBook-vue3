@@ -1,6 +1,29 @@
 <script setup>
 import DatePicker from 'vue3-persian-datetime-picker'
 import Swal from "sweetalert2";
+import { Form, Field, ErrorMessage } from 'vee-validate';
+import { useField, useForm } from "vee-validate";
+
+import * as yup from 'yup';
+
+const schema = yup.object({
+  email: yup.string().matches(/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i, "Invalid email format").required("Email is required"),
+      password: yup.string().min(6, "Password must be at least 6 characters").required("Password is required"),
+});
+
+const { handleSubmit, errors } = useForm({
+  validationSchema: schema,
+});
+
+
+// Fields
+const { value: email } = useField("email");
+const { value: password } = useField("password");
+
+// Form submission
+const submit = handleSubmit((formData) => {
+  console.log("Form submitted successfully:", formData);
+});
 
 const dialogMode = ref('')
 
@@ -41,12 +64,11 @@ const showAlert = (id) => {
     }
   });
 }
-import { ref, computed } from 'vue'
+import { ref, reactive, computed } from "vue";
 
 import { useContactStore } from '../stores/contacts.js';
 
 import { Icon } from '@iconify/vue';
-import { email } from '@vee-validate/rules';
 import { fa } from 'vuetify/locale';
 
 const selectedContact = ref({
@@ -252,6 +274,39 @@ import Forms from '@/components/forms.vue';
       :register-mode="true"
     />
   </div>
+
+  <v-form @submit.prevent="submit">
+      <!-- Email Field -->
+      <div class="email flex flex-col mb-4">
+        <label for="email">Your Email</label>
+        <v-text-field
+          v-model="email"
+          type="email"
+          placeholder="Email@example.com"
+          outlined
+          dense
+          :error-messages="errors.email"
+        ></v-text-field>
+      </div>
+
+      <!-- Password Field -->
+      <div class="password flex flex-col mb-4">
+        <label for="password">Your Password</label>
+        <v-text-field
+          v-model="password"
+          type="password"
+          placeholder="Enter your password"
+          outlined
+          dense
+          :error-messages="errors.password"
+        ></v-text-field>
+      </div>
+
+      <!-- Submit Button -->
+      <v-btn type="submit" color="primary" :disabled="!isValid">
+        Submit
+      </v-btn>
+    </v-form>
 </template>
 
 

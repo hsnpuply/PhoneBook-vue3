@@ -3,14 +3,29 @@ import { ref, watch, computed } from 'vue';
 import VuePersianDatetimePicker from 'vue-persian-datetime-picker'
 import { useContactStore } from '../stores/contacts.js';
 import Swal from "sweetalert2";
-import { Form, Field, ErrorMessage } from 'vee-validate';
 import * as yup from 'yup';
+
+import { Form, Field, ErrorMessage } from 'vee-validate';
+import { useField, useForm } from "vee-validate";
+
+
+
+// const { handleSubmit, errors } = useForm({
+//   validationSchema: schema,
+// });
+
+
+
+
+
 
 const schema = yup.object({
   email: yup.string().required().email().matches(/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i, 'Please use The Correct Email'),
   name: yup.string().required(),
   password: yup.string().required().min(8),
 });
+
+
 
 const contactsStore = useContactStore();
 
@@ -221,6 +236,7 @@ const UpdateDialog = (idModel) => {
               variant="flat"
               color="red"
               @click="cancelDialog()"
+              :disabled="loading"
             >
               انصراف
             </v-btn>
@@ -242,7 +258,6 @@ const UpdateDialog = (idModel) => {
               variant="flat"
               color="green"
               @click="submitData(item)"
-              
             >
               ثبت مخاطب
             </v-btn>
