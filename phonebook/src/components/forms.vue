@@ -125,6 +125,7 @@ const cancelDialog = () => {
      fullname.value = ''
     selectedDate.value = ''
     isCoworker.value = ''
+  emit('update:registerMode', false);
   }
 
   console.log(props.modelState);

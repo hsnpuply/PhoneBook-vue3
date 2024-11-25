@@ -1,30 +1,7 @@
 <script setup>
 import DatePicker from 'vue3-persian-datetime-picker'
 import Swal from "sweetalert2";
-import { Form, Field, ErrorMessage } from 'vee-validate';
-import { useField, useForm } from "vee-validate";
 
-import * as yup from 'yup';
-
-const schema = yup.object({
-  email: yup.string().matches(/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i, "Invalid email format")
-.required("Email is required"),
-      password: yup.string().min(6, "Password must be at least 6 characters").required("Password is required"),
-});
-
-const { handleSubmit, errors } = useForm({
-  validationSchema: schema,
-});
-
-
-// Fields
-const { value: email } = useField("emailZ");
-const { value: password } = useField("passwordZ");
-
-// Form submission
-const submit = handleSubmit((formData) => {
-  console.log("Form submitted successfully:", formData);
-});
 
 const dialogMode = ref('')
 
@@ -90,17 +67,6 @@ const toggleRegisterDialog = () => {
   console.log(dialogRegisterState.value);
 };
 
-// const validateEmail = (value) => {
-//   if (!value) {
-//     return 'مقدار این فیلد نمیتواند خالی باشد';
-//   }
-//   const regex = /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i;
-//   if (!regex.test(value)) {
-//     return 'exmaple@gmail.com باید یک ایمیل صحیح وارد کنید مثل ';
-//   }
-//   return true;
-// }
-
 
 
 const confirmDelete = ref(false)
@@ -118,71 +84,56 @@ const deleteContact = (id) => {
   contactsStore.deleteContact(id);
 };
 
-// const openMyDialog = (item) => {
-//   selectedContact.value = { ...item };
-//   dialog.value = true;
-//   // console.log(selectedContact.value);
-//   changePresistance.value = false
 
-// };
 const loading = ref(false)
 
 
-const UpdateDialog = (id) => {
-  loading.value = true
-  changePresistance.value = true
-  setTimeout(() => {
-    contactsStore.updateContact(id, selectedContact.value);
-    loading.value = false
-    // Show a success toast notification
 
-  }, 1500);
-  setTimeout(() => {
-    dialog.value = false
-    Swal.fire({
-      icon: 'success',
-      title: 'ویرایش مخاطب با موفقیت انجام شد',
-      toast: true,
-      position: 'top-end',
-      showConfirmButton: false,
-      timer: 3000,
-      timerProgressBar: true,
-    });
-  }, 1700);
-
-
-}
-
-// const cancelDialog = () => {
-//   dialog.value = false;
-// }
 import moment, { now } from 'moment-jalaali';
 import Forms from '@/components/forms.vue';
 
+import { useForm, defineRule, configure } from 'vee-validate';
+import * as yup from 'yup';
+
+// Define Yup schema for validation
+// const schema = yup.object({
+//   name: yup.string().required('Name is required').max(10, 'Name must be at most 10 characters'),
+//   email: yup.string().required('Email is required').email('Email must be valid'),
+//   select: yup.string().required('Please select an option'),
+//   checkbox: yup.bool().oneOf([true], 'You must accept the terms'),
+// });
+
+// Vee-Validate form setup
+// const { handleSubmit, values, errors, resetForm, isValid } = useForm({
+//   validationSchema: schema,
+// });
 
 
 
-// const fullname = ref('')
-// const phoneNumber = ref('')
-// const selectedDate = ref('');
-// const isCoworker = ref(false);
+// Clear the form
+const clearForm = () => {
+  resetForm();
+};
 
 
-// const allContactInfo = computed(() => ({
-//   id: contactsStore.contacts.length + 1,
-//   fullname: fullname.value,
-//   phoneNumber: phoneNumber.value,
-//   selectedDate: selectedDate.value,
-//   isCoworker: isCoworker.value
+const email=ref('')
+const name=ref('')
+const password=ref('')
 
-// }))
 
-// const submitData = () => {
-//   contactsStore.addContact(allContactInfo.value)
-//   // console.log(contactsStore.contacts[contactsStore.contacts.length - 1]);
-//   dialog.value = false
+import { Form, Field , ErrorMessage} from 'vee-validate';
 
-// }
+const onSubmit=(values)=>{
+  console.log(JSON.stringify(values, null, 2));
+}
+
+const schema = yup.object({
+  email: yup.string().required('it cant be empty').email('Enter a Valid Email'),
+  name: yup.string().required('should fill the name'),
+  password: yup.string().required('please set a password [ More than 8 Characters ]').min(8),
+});
+
+
 
 </script>
 <template>
@@ -275,40 +226,28 @@ import Forms from '@/components/forms.vue';
       :register-mode="true"
     />
   </div>
+ 
+  <div class="bg-red-500/20 w-full h-80">
+    <Form @submit="onSubmit" :validation-schema="schema" class="flex flex-col text-lg gap-4">
+      <Field
+        v-model="name"
+        name="name"
+        type="name"
+        placeholder="Enter you're name"
+        
+        class="p-5 bg-white rounded-lg w-60"/> 
+    <ErrorMessage name="name"/>
 
-  <v-form @submit.prevent="submit">
-      <!-- Email Field -->
-      <div class="email flex flex-col mb-4">
-        <label for="email">Your Email</label>
-        <v-text-field
-        name="email"
-          v-model="email"
-          type="email"
-          placeholder="Email@example.com"
-          outlined
-          dense
-          :error-messages="errors.email"
-        ></v-text-field>
-      </div>
+    <Field name="email"  v-model="email" placeholder="enter ur email" class="p-5 w-60 bg-white rounded-lg"/> 
+    <ErrorMessage name="email"/>
+    <Field name="password" type="password" v-model="password"  placeholder="enter a valid password" class="p-5 w-60 bg-white rounded-lg"/>
+    <ErrorMessage name="password"/>
 
-      <!-- Password Field -->
-      <div class="password flex flex-col mb-4">
-        <label for="password">Your Password</label>
-        <v-text-field
-          v-model="password"
-          type="password"
-          placeholder="Enter your password"
-          outlined
-          dense
-          :error-messages="errors.password"
-        ></v-text-field>
-      </div>
 
-      <!-- Submit Button -->
-      <v-btn type="submit" color="primary" :disabled="!isValid">
-        Submit
-      </v-btn>
-    </v-form>
+    <button type="submit" class="bg-green-400 w-60 p-4 rounded-lg">Sign up for newsletter</button>
+
+  </Form>
+  </div>
 </template>
 
 
