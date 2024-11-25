@@ -7,7 +7,8 @@ import { useField, useForm } from "vee-validate";
 import * as yup from 'yup';
 
 const schema = yup.object({
-  email: yup.string().matches(/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i, "Invalid email format").required("Email is required"),
+  email: yup.string().matches(/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i, "Invalid email format")
+.required("Email is required"),
       password: yup.string().min(6, "Password must be at least 6 characters").required("Password is required"),
 });
 
@@ -17,8 +18,8 @@ const { handleSubmit, errors } = useForm({
 
 
 // Fields
-const { value: email } = useField("email");
-const { value: password } = useField("password");
+const { value: email } = useField("emailZ");
+const { value: password } = useField("passwordZ");
 
 // Form submission
 const submit = handleSubmit((formData) => {
@@ -280,6 +281,7 @@ import Forms from '@/components/forms.vue';
       <div class="email flex flex-col mb-4">
         <label for="email">Your Email</label>
         <v-text-field
+        name="email"
           v-model="email"
           type="email"
           placeholder="Email@example.com"

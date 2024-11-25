@@ -10,20 +10,21 @@ import { useField, useForm } from "vee-validate";
 
 
 
-// const { handleSubmit, errors } = useForm({
-//   validationSchema: schema,
-// });
-
-
 
 
 
 
 const schema = yup.object({
-  email: yup.string().required().email().matches(/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i, 'Please use The Correct Email'),
-  name: yup.string().required(),
-  password: yup.string().required().min(8),
+  phoneNumber: yup.string().required('شماره تلفن الزامی است').min(11, 'شماره تلفن باید حداقل 11 کاراکتر باشد'),
+  fullname: yup.string().required('نام و نام خانوادگی الزامی است'),
+  selectedDate: yup.string().required('تاریخ تولد الزامی است'),
 });
+
+
+const { handleSubmit, errors } = useForm({
+  validationSchema: schema,
+});
+
 
 
 
@@ -48,6 +49,13 @@ const phoneModel = ref(props.phoneModel || '');
 const fullname = ref(props.fullname || '');
 const selectedDate = ref(props.selectedDate || '');
 const isCoworker = ref(props.isCoworker);
+
+// Define fields using useField
+const { value: phoneModelValidate , errorMessage: phoneModelValidateError } = useField('phoneModel');
+const { value: fullNameValidate  , errorMessage : fullNameValidateError} = useField('fullname');
+const { value: selectedBirthDateValidate , errorMessage : selectedBirthDateValidateError } = useField('selectedDate');
+
+
 
 const loading = ref(false)
 
@@ -112,10 +120,13 @@ const submitData = () => {
 }
 const cancelDialog = () => {
   emit('update:modelState', false);
-  phoneModel.value = ''
+  if(props.registerMode){
+    phoneModel.value = ''
      fullname.value = ''
     selectedDate.value = ''
     isCoworker.value = ''
+  }
+
   console.log(props.modelState);
 
 };
@@ -190,7 +201,8 @@ const UpdateDialog = (idModel) => {
             <v-text-field
               v-model="phoneModel"
               label="شماره تلفن"
-              :placeholder="props.phoneModel"
+              placeholder="مثال : 09928717522"
+              :error-messages="phoneNumberError"
             />
           </v-col>
 
@@ -202,7 +214,7 @@ const UpdateDialog = (idModel) => {
             <v-text-field
               v-model="fullname"
               label="نام و نام خانوادگی"
-              :placeholder="props.fullname"
+              placeholder="مثال : علی علوی"
             />
           </v-col>
           <v-col cols="8">
@@ -210,6 +222,8 @@ const UpdateDialog = (idModel) => {
               v-model="selectedDate"
               format="YYYY-MM-DD"
               display-format="jYYYY-jMM-jDD"
+              placeholder="تاریخ تولد خود را وارد کنید"
+
             />
           </v-col>
 
