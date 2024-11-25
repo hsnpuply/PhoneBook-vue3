@@ -42,13 +42,7 @@ const showAlert = (id) => {
   });
 }
 import { ref, computed } from 'vue'
-import { Form, Field, ErrorMessage } from 'vee-validate';
-import * as yup from 'yup';
-const schema = yup.object({
-  email: yup.string().required().email().matches(/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i, 'Please use The Correct Email'),
-  name: yup.string().required(),
-  password: yup.string().required().min(8),
-});
+
 import { useContactStore } from '../stores/contacts.js';
 
 import { Icon } from '@iconify/vue';
@@ -73,16 +67,16 @@ const toggleRegisterDialog = () => {
   console.log(dialogRegisterState.value);
 };
 
-const validateEmail = (value) => {
-  if (!value) {
-    return 'مقدار این فیلد نمیتواند خالی باشد';
-  }
-  const regex = /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i;
-  if (!regex.test(value)) {
-    return 'exmaple@gmail.com باید یک ایمیل صحیح وارد کنید مثل ';
-  }
-  return true;
-}
+// const validateEmail = (value) => {
+//   if (!value) {
+//     return 'مقدار این فیلد نمیتواند خالی باشد';
+//   }
+//   const regex = /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i;
+//   if (!regex.test(value)) {
+//     return 'exmaple@gmail.com باید یک ایمیل صحیح وارد کنید مثل ';
+//   }
+//   return true;
+// }
 
 
 
@@ -93,9 +87,7 @@ const contactsStore = useContactStore();
 const allContacts = contactsStore.getContacts
 const contact_state = contactsStore.contacts
 
-const formDialog = (formType) => {
-  const title = "formType."
-}
+
 
 
 
@@ -103,14 +95,13 @@ const deleteContact = (id) => {
   contactsStore.deleteContact(id);
 };
 
-const openMyDialog = (item) => {
-  selectedContact.value = { ...item };
-  dialog.value = true;
-  // console.log(selectedContact.value);
-  changePresistance.value = false
+// const openMyDialog = (item) => {
+//   selectedContact.value = { ...item };
+//   dialog.value = true;
+//   // console.log(selectedContact.value);
+//   changePresistance.value = false
 
-
-};
+// };
 const loading = ref(false)
 
 
@@ -139,36 +130,36 @@ const UpdateDialog = (id) => {
 
 }
 
-const cancelDialog = () => {
-  dialog.value = false;
-}
+// const cancelDialog = () => {
+//   dialog.value = false;
+// }
 import moment, { now } from 'moment-jalaali';
 import Forms from '@/components/forms.vue';
 
 
 
 
-const fullname = ref('')
-const phoneNumber = ref('')
-const selectedDate = ref('');
-const isCoworker = ref(false);
+// const fullname = ref('')
+// const phoneNumber = ref('')
+// const selectedDate = ref('');
+// const isCoworker = ref(false);
 
 
-const allContactInfo = computed(() => ({
-  id: contactsStore.contacts.length + 1,
-  fullname: fullname.value,
-  phoneNumber: phoneNumber.value,
-  selectedDate: selectedDate.value,
-  isCoworker: isCoworker.value
+// const allContactInfo = computed(() => ({
+//   id: contactsStore.contacts.length + 1,
+//   fullname: fullname.value,
+//   phoneNumber: phoneNumber.value,
+//   selectedDate: selectedDate.value,
+//   isCoworker: isCoworker.value
 
-}))
+// }))
 
-const submitData = () => {
-  contactsStore.addContact(allContactInfo.value)
-  // console.log(contactsStore.contacts[contactsStore.contacts.length - 1]);
-  dialog.value = false
+// const submitData = () => {
+//   contactsStore.addContact(allContactInfo.value)
+//   // console.log(contactsStore.contacts[contactsStore.contacts.length - 1]);
+//   dialog.value = false
 
-}
+// }
 
 </script>
 <template>
@@ -198,19 +189,42 @@ const submitData = () => {
         </tr>
       </thead>
       <tbody>
-        <tr v-for="(item, index) in contactsStore.contacts" :key="index"
+        <tr
+          v-for="(item, index) in contactsStore.contacts"
+          :key="index"
           class="text-right  bg-blue-950 text-lg cursor-pointer hover:bg-blue-900 border-b-4  hover:border-black border-transparent select-none "
-          @dblclick="toggleEditDialog(item)">
-          <td v-if="contact_state.length > 0" class=" flex justify-end w-full gap-2 border-none ">
-            <v-btn variant="flat" color="red" prepend-icon="mdi-delete" @click="showAlert(item.id)">
+          @dblclick="toggleEditDialog(item)"
+        >
+          <td
+            v-if="contact_state.length > 0"
+            class=" flex justify-end w-full gap-2 border-none "
+          >
+            <v-btn
+              variant="flat"
+              color="red"
+              prepend-icon="mdi-delete"
+              @click="showAlert(item.id)"
+            >
               حذف
             </v-btn>
-            <v-btn variant="flat" color="blue" prepend-icon="mdi-account" @click="toggleEditDialog(item)">
+            <v-btn
+              variant="flat"
+              color="blue"
+              prepend-icon="mdi-account"
+              @click="toggleEditDialog(item)"
+            >
               ویرایش
             </v-btn>
-            <Forms v-model:model-state="dialogEditState" title="ویرایش مخاطب" :phoneModel="selectedContact.phoneNumber"
-              :fullname="selectedContact.fullname" :isCoworker="false" :selectedDate="selectedContact.selectedDate"
-              :edit-mode="true" :currentData="selectedContact.id" />
+            <Forms
+              v-model:model-state="dialogEditState"
+              title="ویرایش مخاطب"
+              :phone-model="selectedContact.phoneNumber"
+              :fullname="selectedContact.fullname"
+              :isCoworker="selectedContact.isCoworker"
+              :selected-date="selectedContact.selectedDate"
+              :edit-mode="true"
+              :current-data="selectedContact.id"
+            />
           </td>
           <td>{{ item.isCoworker ? 'بله' : 'خیر' }}</td>
           <td>{{ moment(item.selectedDate).format('jYYYY/jMM/jDD') }}</td>
@@ -222,13 +236,21 @@ const submitData = () => {
     </v-table>
   </div>
   <div class="addNewContact w-full flex justify-end py-5 px-3">
-    <v-btn color="green" size="large" @click="toggleRegisterDialog">
+    <v-btn
+      color="green"
+      size="large"
+      @click="toggleRegisterDialog"
+    >
       <v-icon left>
         mdi-plus
       </v-icon>
       ثبت مخاطب
     </v-btn>
-    <Forms v-model:model-state="dialogRegisterState" title="ثبت مخاطب" :register-mode="true" />
+    <Forms
+      v-model:model-state="dialogRegisterState"
+      title="ثبت مخاطب"
+      :register-mode="true"
+    />
   </div>
 </template>
 
