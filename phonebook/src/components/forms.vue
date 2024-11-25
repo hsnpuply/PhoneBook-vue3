@@ -1,5 +1,6 @@
 <script setup>
 import { ref, watch, computed } from 'vue';
+import VuePersianDatetimePicker from 'vue-persian-datetime-picker'
 import { useContactStore } from '../stores/contacts.js';
 import Swal from "sweetalert2";
 const contactsStore = useContactStore();
@@ -13,7 +14,6 @@ const props = defineProps({
   selectedDate: String,
   isCoworker: Boolean,
   openMyDialog: Function,
-  submitData: Function,
   editMode: Boolean,
   registerMode: Boolean,
   currentData: Object,
@@ -46,7 +46,42 @@ watch(() => props.isCoworker, (newVal) => {
 });
 const emit = defineEmits();
 
+const submitData = () => {
+  const registerContactInfo = {
+    id: contactsStore.contacts.length + 1,
+    phoneNumber: phoneModel.value,
+    fullname: fullname.value,
+    selectedDate: selectedDate.value,
+    isCoworker: isCoworker.value,
+  };
+  console.log(contactsStore.contacts.length + 1);
+  console.log(registerContactInfo);
 
+  setTimeout(() => {
+    contactsStore.addContact(registerContactInfo)
+    emit('update:modelState', false);
+    
+
+  },1500)
+    phoneModel.value = ''
+     fullname.value = ''
+    selectedDate.value = ''
+    isCoworker.value = ''
+
+  setTimeout(() => {
+    Swal.fire({
+      icon: 'success',
+      title: ' مخاطب با موفقیت ثبت شد',
+      toast: true,
+      position: 'top-end',
+      showConfirmButton: false,
+      timer: 3000,
+      timerProgressBar: true,
+    });
+  }, 1700);
+
+
+}
 const cancelDialog = () => {
   emit('update:modelState', false);
   console.log(props.modelState);
@@ -64,6 +99,8 @@ const UpdateDialog = (idModel) => {
     selectedDate: selectedDate.value,
     isCoworker: isCoworker.value,
   };
+
+
   setTimeout(() => {
     contactsStore.updateContact(idModel, updatedContact);
     console.log(props.currentData)
@@ -89,7 +126,7 @@ const UpdateDialog = (idModel) => {
 
 </script>
 <template>
-  <v-dialog v-model="props.modelState" max-width="800" class="bg-teal-400/5">
+  <v-dialog v-model="props.modelState" max-width="600" class="bg-teal-400/5">
     <!-- :persistent="changePresistance" -->
 
 
@@ -104,8 +141,7 @@ const UpdateDialog = (idModel) => {
             <v-text-field v-model="fullname" label="نام و نام خانوادگی" :placeholder="props.fullname" />
           </v-col>
           <v-col cols="8">
-            <!-- <v-text-field v-model="selectedDate" type="date" label="انتخاب تاریخ تولد" /> -->
-
+            <date-picker v-model="selectedDate" format="YYYY-MM-DD" display-format="jYYYY-jMM-jDD" />
           </v-col>
 
           <v-col cols="8" class="d-flex justify-end">

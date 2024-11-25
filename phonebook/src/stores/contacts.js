@@ -27,7 +27,6 @@ export const useContactStore = defineStore('app', {
     
      addContact(contact) {
       this.contacts.push(contact)
-
     },
 
      deleteContact(id) {
