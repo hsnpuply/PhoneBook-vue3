@@ -41,19 +41,22 @@ const props = defineProps({
   editMode: Boolean,
   registerMode: Boolean,
   currentData: Object,
-  UpdateDialog: Function
+  UpdateDialog: Function,
+  DataFields: Object
 
 })
 
-const phoneModel = ref(props.phoneModel || '');
-const fullname = ref(props.fullname || '');
-const selectedDate = ref(props.selectedDate || '');
-const isCoworker = ref(props.isCoworker);
+
+
+const phoneModel = ref(props.DataFields || '');
+const fullname = ref(props.DataFields || '');
+const selectedDate = ref(props.DataFields || '');
+const isCoworker = ref(props.DataFields);
 
 // Define fields using useField
-const { value: phoneModelValidate , errorMessage: phoneModelValidateError } = useField('phoneModel');
-const { value: fullNameValidate  , errorMessage : fullNameValidateError} = useField('fullname');
-const { value: selectedBirthDateValidate , errorMessage : selectedBirthDateValidateError } = useField('selectedDate');
+const { value: phoneModelValidate, errorMessage: phoneModelValidateError } = useField('phoneModel');
+const { value: fullNameValidate, errorMessage: fullNameValidateError } = useField('fullname');
+const { value: selectedBirthDateValidate, errorMessage: selectedBirthDateValidateError } = useField('selectedDate');
 
 
 
@@ -62,8 +65,8 @@ const loading = ref(false)
 
 
 // Watch for changes in props and update the reactive variables
-watch(() => props.phoneModel, (newVal) => {
-  phoneModel.value = newVal;
+watch(() => props.DataFields.phoneNumber, (newVal) => {
+  props.DataFields.phoneNumber = newVal;
 });
 
 watch(() => props.fullname, (newVal) => {
@@ -94,9 +97,9 @@ const submitData = () => {
   setTimeout(() => {
     contactsStore.addContact(registerContactInfo)
     emit('update:modelState', false);
-    
 
-  },1500)
+
+  }, 1500)
 
 
   setTimeout(() => {
@@ -110,7 +113,7 @@ const submitData = () => {
       timerProgressBar: true,
     });
     phoneModel.value = ''
-     fullname.value = ''
+    fullname.value = ''
     selectedDate.value = ''
     isCoworker.value = ''
     loading.value = false
@@ -120,12 +123,12 @@ const submitData = () => {
 }
 const cancelDialog = () => {
   emit('update:modelState', false);
-  if(props.registerMode){
+  if (props.registerMode) {
     phoneModel.value = ''
-     fullname.value = ''
+    fullname.value = ''
     selectedDate.value = ''
     isCoworker.value = ''
-  emit('update:registerMode', false);
+    emit('update:registerMode', false);
   }
 
   console.log(props.modelState);
@@ -135,8 +138,8 @@ const UpdateDialog = (idModel) => {
   console.log(isCoworker.value);
   loading.value = true
 
-
-  console.log(contactsStore.contacts)
+  console.log(props.DataFields)
+  // console.log(contactsStore.contacts)
   // console.log(birthDate.value)
   const updatedContact = {
     id: props.currentData,
@@ -166,9 +169,9 @@ const UpdateDialog = (idModel) => {
       timerProgressBar: true,
 
     });
-  loading.value = false
-  phoneModel.value = ''
-     fullname.value = ''
+    loading.value = false
+    phoneModel.value = ''
+    fullname.value = ''
     selectedDate.value = ''
     isCoworker.value = ''
   }, 1700);
@@ -178,102 +181,46 @@ const UpdateDialog = (idModel) => {
 
 </script>
 <template>
-  <v-dialog
-    v-model="props.modelState"
-    max-width="600"
-    class="bg-teal-400/5"
-  >
+  <v-dialog v-model="props.modelState" max-width="600" class="bg-teal-400/5">
     <!-- :persistent="changePresistance" -->
 
 
-    <v-card
-      prepend-icon="mdi-account"
-      :title="props.title"
-      class="items-end "
-    >
+    <v-card prepend-icon="mdi-account" :title="props.title" class="items-end ">
       <v-card-text class="text-right bg-gray-700 w-full  ">
         <v-row class=" justify-end   ">
-          <v-col
-            cols="12"
-            md="4"
-            sm="6"
-            class=""
-          >
-            <v-text-field
-              v-model="phoneModel"
-              label="شماره تلفن"
-              placeholder="مثال : 09928717522"
-              :error-messages="phoneNumberError"
-            />
+          <v-col cols="12" md="4" sm="6" class="">
+            <v-text-field v-model="phoneModel" label="شماره تلفن" placeholder="مثال : 09928717522"
+              :error-messages="phoneNumberError" />
           </v-col>
 
-          <v-col
-            cols="24"
-            md="4"
-            sm="6"
-          >
-            <v-text-field
-              v-model="fullname"
-              label="نام و نام خانوادگی"
-              placeholder="مثال : علی علوی"
-            />
+          <v-col cols="24" md="4" sm="6">
+            <v-text-field v-model="fullname" label="نام و نام خانوادگی" placeholder="مثال : علی علوی" />
           </v-col>
           <v-col cols="8">
-            <date-picker
-              v-model="selectedDate"
-              format="YYYY-MM-DD"
-              display-format="jYYYY-jMM-jDD"
-              placeholder="تاریخ تولد خود را وارد کنید"
-
-            />
+            <date-picker v-model="selectedDate" format="YYYY-MM-DD" display-format="jYYYY-jMM-jDD"
+              placeholder="تاریخ تولد خود را وارد کنید" />
           </v-col>
 
-          <v-col
-            cols="8"
-            class="d-flex justify-end"
-          >
-            <v-switch
-              v-model="isCoworker"
-              color="primary"
-            >
+          <v-col cols="8" class="d-flex justify-end">
+            <v-switch v-model="isCoworker" color="primary">
               <template #label>
                 <span class="text-gray-100 text-lg font-bold">همکار</span>
               </template>
             </v-switch>
           </v-col>
         </v-row>
-        <v-col
-          cols="12"
-          class="mb-2 flex justify-start  "
-        >
+        <v-col cols="12" class="mb-2 flex justify-start  ">
           <v-row class="gap-4 justify-end">
-            <v-btn
-              variant="flat"
-              color="red"
-              @click="cancelDialog()"
-              :disabled="loading"
-            >
+            <v-btn variant="flat" color="red" @click="cancelDialog()" :disabled="loading">
               انصراف
             </v-btn>
 
-            <v-btn
-              v-if="props.editMode"
-              :loading="loading"
-              variant="flat"
-              type="submit"
-              color="green"
-              @click="UpdateDialog(currentData)"
-            >
+            <v-btn v-if="props.editMode" :loading="loading" variant="flat" type="submit" color="green"
+              @click="UpdateDialog(currentData)">
               اعمال تغییرات
             </v-btn>
 
-            <v-btn
-              v-if="props.registerMode"
-              :loading="loading"
-              variant="flat"
-              color="green"
-              @click="submitData(item)"
-            >
+            <v-btn v-if="props.registerMode" :loading="loading" variant="flat" color="green" @click="submitData(item)">
               ثبت مخاطب
             </v-btn>
           </v-row>
@@ -283,6 +230,4 @@ const UpdateDialog = (idModel) => {
   </v-dialog>
 </template>
 
-<style scoped>
-
-</style>
+<style scoped></style>
