@@ -8,12 +8,6 @@ import * as yup from 'yup';
 import { Form, Field, ErrorMessage } from 'vee-validate';
 import { useField, useForm } from "vee-validate";
 
-
-
-
-
-
-
 const schema = yup.object({
   phoneNumber: yup.string().required('شماره تلفن الزامی است').min(11, 'شماره تلفن باید حداقل 11 کاراکتر باشد'),
   fullname: yup.string().required('نام و نام خانوادگی الزامی است'),
@@ -42,10 +36,9 @@ const props = defineProps({
   registerMode: Boolean,
   currentData: Object,
   UpdateDialog: Function,
-  DataFields: Object
-
+  formFieldsData:Object
 })
-
+console.log(props.formFieldsData.value);
 
 
 const phoneModel = ref(props.DataFields || '');
