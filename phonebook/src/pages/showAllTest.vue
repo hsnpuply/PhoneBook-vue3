@@ -197,7 +197,8 @@ const schema = yup.object({
               :isCoworker="selectedContact.isCoworker"
               :selected-date="selectedContact.selectedDate"
               :edit-mode="true"
-              :current-data="selectedContact.id"
+              :currentData="selectedContact.id"
+              :allFormsFields="selectedContact"
             />
           </td>
           <td>{{ item.isCoworker ? 'بله' : 'خیر' }}</td>

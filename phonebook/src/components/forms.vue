@@ -1,5 +1,5 @@
 <script setup>
-import { ref, watch, computed } from 'vue';
+import { ref, watch, computed , reactive } from 'vue';
 import VuePersianDatetimePicker from 'vue-persian-datetime-picker'
 import { useContactStore } from '../stores/contacts.js';
 import Swal from "sweetalert2";
@@ -41,17 +41,34 @@ const props = defineProps({
   editMode: Boolean,
   registerMode: Boolean,
   currentData: Object,
-  UpdateDialog: Function
+  UpdateDialog: Function,
+  allFormsFields:Object
 
 })
+const emit = defineEmits(['update:modelState', 'update:allFormsFields']);
+
+// Local reactive variables
+const localFields = reactive({ ...props.allFormsFields });
+watch(() => props.allFormsFields, (newFields) => {
+  // localFields.value = { ...newFields };
+  Object.assign(localFields, newFields);
+});
+
+const updateField = (key, value) => {
+  localFields.value[key] = value;
+  emit('update:allFormsFields', { ...localFields.value });
+  console.log(localFields.value[key]);
+  
+};
 
 const phoneModel = ref(props.phoneModel || '');
 const fullname = ref(props.fullname || '');
 const selectedDate = ref(props.selectedDate || '');
 const isCoworker = ref(props.isCoworker);
 
+
 // Define fields using useField
-const { value: phoneModelValidate , errorMessage: phoneModelValidateError } = useField('phoneModel');
+const { value: allFormsField , errorMessage: phoneModelValidateError } = useField('phoneModel');
 const { value: fullNameValidate  , errorMessage : fullNameValidateError} = useField('fullname');
 const { value: selectedBirthDateValidate , errorMessage : selectedBirthDateValidateError } = useField('selectedDate');
 
@@ -77,16 +94,15 @@ watch(() => props.selectedDate, (newVal) => {
 watch(() => props.isCoworker, (newVal) => {
   isCoworker.value = newVal;
 });
-const emit = defineEmits();
 
 const submitData = () => {
   loading.value = true
   const registerContactInfo = {
     id: contactsStore.contacts.length + 1,
-    phoneNumber: phoneModel.value,
-    fullname: fullname.value,
-    selectedDate: selectedDate.value,
-    isCoworker: isCoworker.value,
+    phoneNumber: localFields.phoneNumber,
+    fullname: localFields.fullname,
+    selectedDate: localFields.selectedDate,
+    isCoworker: localFields.isCoworker,
   };
   console.log(contactsStore.contacts.length + 1);
   console.log(registerContactInfo);
@@ -119,6 +135,8 @@ const submitData = () => {
 
 }
 const cancelDialog = () => {
+console.log(localFields.phoneNumber);
+
   emit('update:modelState', false);
   if(props.registerMode){
     phoneModel.value = ''
@@ -132,7 +150,7 @@ const cancelDialog = () => {
 
 };
 const UpdateDialog = (idModel) => {
-  console.log(isCoworker.value);
+  console.log(localFields.fullname);
   loading.value = true
 
 
@@ -140,10 +158,10 @@ const UpdateDialog = (idModel) => {
   // console.log(birthDate.value)
   const updatedContact = {
     id: props.currentData,
-    phoneNumber: phoneModel.value,
-    fullname: fullname.value,
-    selectedDate: selectedDate.value,
-    isCoworker: isCoworker.value,
+    phoneNumber: localFields.phoneNumber,
+    fullname: localFields.fullname,
+    selectedDate: localFields.selectedDate,
+    isCoworker: localFields.isCoworker,
   };
 
 
@@ -167,10 +185,10 @@ const UpdateDialog = (idModel) => {
 
     });
   loading.value = false
-  phoneModel.value = ''
-     fullname.value = ''
-    selectedDate.value = ''
-    isCoworker.value = ''
+  localFields.phoneModel = ''
+     localFields.fullname = ''
+    localFields.selectedDate = ''
+    localFields.isCoworker = ''
   }, 1700);
 
 
@@ -200,7 +218,7 @@ const UpdateDialog = (idModel) => {
             class=""
           >
             <v-text-field
-              v-model="phoneModel"
+              v-model="localFields.phoneNumber"
               label="شماره تلفن"
               placeholder="مثال : 09928717522"
               :error-messages="phoneNumberError"
@@ -213,14 +231,14 @@ const UpdateDialog = (idModel) => {
             sm="6"
           >
             <v-text-field
-              v-model="fullname"
+              v-model="localFields.fullname"
               label="نام و نام خانوادگی"
               placeholder="مثال : علی علوی"
             />
           </v-col>
           <v-col cols="8">
             <date-picker
-              v-model="selectedDate"
+              v-model="localFields.selectedDate"
               format="YYYY-MM-DD"
               display-format="jYYYY-jMM-jDD"
               placeholder="تاریخ تولد خود را وارد کنید"
@@ -233,7 +251,7 @@ const UpdateDialog = (idModel) => {
             class="d-flex justify-end"
           >
             <v-switch
-              v-model="isCoworker"
+              v-model="localFields.isCoworker"
               color="primary"
             >
               <template #label>
