@@ -6,6 +6,17 @@ import Swal from "sweetalert2";
 const dialogMode = ref('')
 
 
+const convertNumbersToPersian = (text) => {
+  const englishNumbers = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'];
+  const persianNumbers = ['۰', '۱', '۲', '۳', '۴', '۵', '۶', '۷', '۸', '۹'];
+
+  let result = text;
+  for (let i = 0; i < englishNumbers.length; i++) {
+    const regex = new RegExp(englishNumbers[i], 'g');
+    result = result.replace(regex, persianNumbers[i]);
+  }
+  return result;
+}
 
 const date = ref('')
 
@@ -137,13 +148,20 @@ const schema = yup.object({
 
 </script>
 <template>
-  <h2 class="text-center my-4 bg-green text-3xl text-black">
+  <div class=" mx-auto mainContent min-h-[100vh]">
+    <header class="titlePage ">
+  <div class="titleText bg-black/50 p-2 ">
+    <h1 class="text-center my-4 text-3xl text-black font-jaro ">
     دفترچه تلفن
-  </h2>
+    
+  </h1>
+  </div>
 
-  <div class="bg-warning">
-    <v-table density="compact">
-      <thead>
+</header>
+
+    <div class="bg-warning ">
+    <v-table >
+      <thead class="bg-gray-500">
         <tr>
           <th class="text-right">
             عملیات
@@ -160,18 +178,19 @@ const schema = yup.object({
           <th class="text-right">
             نام و نام خانوادگی
           </th>
+          <th class="text-right">شماره</th>
         </tr>
       </thead>
-      <tbody>
+      <tbody class="">
         <tr
           v-for="(item, index) in contactsStore.contacts"
           :key="index"
-          class="text-right  bg-blue-950 text-lg cursor-pointer hover:bg-blue-900 border-b-4  hover:border-black border-transparent select-none "
+          class="text-right text-xl  bg-gray-500/50 cursor-pointer hover:bg-blue-900 border-b-4  hover:border-black border-transparent select-none "
           @dblclick="toggleEditDialog(item)"
         >
           <td
             v-if="contact_state.length > 0"
-            class=" flex justify-end w-full gap-2 border-none "
+            class=" flex justify-end w-full gap-2 border-none items-center "
           >
             <v-btn
               variant="flat"
@@ -202,8 +221,8 @@ const schema = yup.object({
             />
           </td>
           <td>{{ item.isCoworker ? 'بله' : 'خیر' }}</td>
-          <td>{{ moment(item.selectedDate).format('jYYYY/jMM/jDD') }}</td>
-          <td>{{ item.phoneNumber }}</td>
+          <td>{{ convertNumbersToPersian(moment(item.selectedDate).format('jYYYY/jMM/jDD')) }}</td>
+          <td>{{ convertNumbersToPersian(item.phoneNumber) }}</td>
           <td>{{ item.fullname }}</td>
           <td>{{ item.id }}</td>
         </tr>
@@ -228,7 +247,7 @@ const schema = yup.object({
     />
   </div>
  
-  <div class="bg-red-500/20 w-full h-80">
+  <!-- <div class="bg-red-500/20 w-full h-80">
     <Form @submit="onSubmit" :validation-schema="schema" class="flex flex-col text-lg gap-4">
       <Field
         v-model="name"
@@ -248,8 +267,18 @@ const schema = yup.object({
     <button type="submit" class="bg-green-400 w-60 p-4 rounded-lg">Sign up for newsletter</button>
 
   </Form>
+  </div> -->
   </div>
+
+
+
 </template>
 
 
-<style scoped></style>
+<style scoped>
+.mainContent{
+  background-image: url(../assets/bckground.png);
+  background-position: center;
+  background-repeat: repeat;
+}
+</style>

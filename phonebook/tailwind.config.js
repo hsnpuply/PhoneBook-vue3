@@ -9,6 +9,7 @@ export default {
     extend: {
       fontFamily: {
         sans: ['Roboto', 'sans-serif'], // Override default sans
+        vazir:['VazirPersian','sans-serif']
       },
     },  },
   plugins: [],

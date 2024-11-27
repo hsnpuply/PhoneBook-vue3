@@ -9,6 +9,17 @@ import { Form, Field, ErrorMessage } from 'vee-validate';
 import { useField, useForm } from "vee-validate";
 
 
+const convertNumbersToPersian = (text) => {
+  const englishNumbers = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'];
+  const persianNumbers = ['۰', '۱', '۲', '۳', '۴', '۵', '۶', '۷', '۸', '۹'];
+
+  let result = text;
+  for (let i = 0; i < englishNumbers.length; i++) {
+    const regex = new RegExp(englishNumbers[i], 'g');
+    result = result.replace(regex, persianNumbers[i]);
+  }
+  return result;
+}
 
 
 
@@ -52,6 +63,12 @@ const localFields = reactive({ ...props.allFormsFields });
 watch(() => props.allFormsFields, (newFields) => {
   // localFields.value = { ...newFields };
   Object.assign(localFields, newFields);
+  //   // برای هر فیلد عددی، تبدیل اعداد به فارسی
+  // Object.keys(localFields).forEach((key) => {
+  //   if (typeof localFields[key] === 'string' && !isNaN(localFields[key])) {
+  //     localFields[key] = convertNumbersToPersian(localFields[key]);
+  //   }
+  // });
 });
 
 const updateField = (key, value) => {
@@ -61,10 +78,6 @@ const updateField = (key, value) => {
   
 };
 
-const phoneModel = ref(props.phoneModel || '');
-const fullname = ref(props.fullname || '');
-const selectedDate = ref(props.selectedDate || '');
-const isCoworker = ref(props.isCoworker);
 
 
 // Define fields using useField
