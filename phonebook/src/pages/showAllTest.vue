@@ -208,21 +208,12 @@ const schema = yup.object({
             >
               ویرایش
             </v-btn>
-            <Forms
-              v-model:model-state="dialogEditState"
-              title="ویرایش مخاطب"
-              :phone-model="selectedContact.phoneNumber"
-              :fullname="selectedContact.fullname"
-              :isCoworker="selectedContact.isCoworker"
-              :selected-date="selectedContact.selectedDate"
-              :edit-mode="true"
-              :currentData="selectedContact.id"
-              :allFormsFields="selectedContact"
-            />
           </td>
           <td>{{ item.isCoworker ? 'بله' : 'خیر' }}</td>
-          <td>{{ convertNumbersToPersian(moment(item.selectedDate).format('jYYYY/jMM/jDD')) }}</td>
-          <td>{{ convertNumbersToPersian(item.phoneNumber) }}</td>
+          <td>{{ moment(item.selectedDate).format('jYYYY/jMM/jDD') }}</td>
+          <td>{{ item.phoneNumber }}</td>
+          <!-- <td>{{ convertNumbersToPersian(moment(item.selectedDate).format('jYYYY/jMM/jDD')) }}</td> -->
+          <!-- <td>{{ convertNumbersToPersian(item.phoneNumber) }}</td> -->
           <td>{{ item.fullname }}</td>
           <td>{{ item.id }}</td>
         </tr>
@@ -246,30 +237,18 @@ const schema = yup.object({
       :register-mode="true"
     />
   </div>
- 
-  <!-- <div class="bg-red-500/20 w-full h-80">
-    <Form @submit="onSubmit" :validation-schema="schema" class="flex flex-col text-lg gap-4">
-      <Field
-        v-model="name"
-        name="name"
-        type="name"
-        placeholder="Enter you're name"
-        
-        class="p-5 bg-white rounded-lg w-60"/> 
-    <ErrorMessage name="name"/>
-
-    <Field name="email"  v-model="email" placeholder="enter ur email" class="p-5 w-60 bg-white rounded-lg"/> 
-    <ErrorMessage name="email"/>
-    <Field name="password" type="password" v-model="password"  placeholder="enter a valid password" class="p-5 w-60 bg-white rounded-lg"/>
-    <ErrorMessage name="password"/>
-
-
-    <button type="submit" class="bg-green-400 w-60 p-4 rounded-lg">Sign up for newsletter</button>
-
-  </Form>
-  </div> -->
   </div>
-
+  <Forms
+              v-model:model-state="dialogEditState"
+              title="ویرایش مخاطب"
+              :phone-model="selectedContact.phoneNumber"
+              :fullname="selectedContact.fullname"
+              :isCoworker="selectedContact.isCoworker"
+              :selected-date="selectedContact.selectedDate"
+              :edit-mode="true"
+              :currentData="selectedContact.id"
+              :allFormsFields="selectedContact"
+            />
 
 
 </template>
