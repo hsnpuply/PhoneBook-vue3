@@ -151,7 +151,7 @@ const schema = yup.object({
   <div class=" mx-auto mainContent min-h-[100vh]">
     <header class="titlePage ">
   <div class="titleText bg-black/50 p-2 ">
-    <h1 class="text-center my-4 text-3xl text-black font-jaro ">
+    <h1 class="text-center my-4 text-3xl text-black font-semibold ">
     دفترچه تلفن
     
   </h1>
@@ -210,10 +210,10 @@ const schema = yup.object({
             </v-btn>
           </td>
           <td>{{ item.isCoworker ? 'بله' : 'خیر' }}</td>
-          <td>{{ moment(item.selectedDate).format('jYYYY/jMM/jDD') }}</td>
-          <td>{{ item.phoneNumber }}</td>
-          <!-- <td>{{ convertNumbersToPersian(moment(item.selectedDate).format('jYYYY/jMM/jDD')) }}</td> -->
-          <!-- <td>{{ convertNumbersToPersian(item.phoneNumber) }}</td> -->
+          <!-- <td>{{ moment(item.selectedDate).format('jYYYY/jMM/jDD') }}</td>
+          <td>{{ item.phoneNumber }}</td> -->
+          <td>{{ convertNumbersToPersian(moment(item.selectedDate).format('jYYYY/jMM/jDD')) }}</td>
+          <td>{{ convertNumbersToPersian(item.phoneNumber) }}</td>
           <td>{{ item.fullname }}</td>
           <td>{{ item.id }}</td>
         </tr>

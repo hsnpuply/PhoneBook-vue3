@@ -23,7 +23,7 @@ const loading = ref(false)
 const emit = defineEmits(['update:modelState', 'update:allFormsFields']);
 
 // Local reactive variables
-const localFields = reactive({ ...props.allFormsFields });
+// const localFields = reactive({ ...props.allFormsFields });
 
 
 
@@ -37,11 +37,12 @@ const state = reactive({
   }
 })
 
-onMounted(()=>{
-  state.form = {...props.allFormsFields}
-  console.log(state.form);
-  
-})
+onMounted(() => {
+  if (props.allFormsFields) {
+    Object.assign(state.form, props.allFormsFields);
+  }
+  console.log("Initialized form data:", state.form);
+});
 
 
 const schema = yup.object({
@@ -50,18 +51,22 @@ const schema = yup.object({
   selectedDate:yup.string().nullable(true).required("وارد کردن تاریخ تولد الزامیست")
 });
 
-const { handleSubmit, errors, resetForm } = useForm({
+
+const { handleSubmit, resetForm } = useForm({
   validationSchema: schema,
   initialValues: state.form,
+  validateOnMount: false,
+  validateOnBlur: false, 
+  initialErrors:false,
+  initialTouched:false,
 });
 
 const { value: fullname } = useField("fullname");
 const { value: phoneNumber } = useField("phoneNumber");
 const { value: selectedDate } = useField("selectedDate");
 
-const handleSubmitFormClick = handleSubmit( () => {
-  props.registerMode ? submitData() :'!'
-
+const handleSubmitFormClick = handleSubmit( (item) => {
+  props.registerMode ? submitData() : UpdateDialog(item)
 });
 
 const handleSubmitFormClickByEdit = (item)=>{
@@ -79,57 +84,14 @@ const submitNewData = ()=>{
   alert(state.form.fullname)
 }
 
-// const schema = yup.object({
-//   phoneNumber: yup.string().required('شماره تلفن الزامی است').min(11, 'شماره تلفن باید حداقل 11 کاراکتر باشد'),
-//   fullname: yup.string().required('نام و نام خانوادگی الزامی است'),
-//   selectedDate: yup.string().required('تاریخ تولد الزامی است'),
-// });
-
-
-watch(() => props.allFormsFields, (newFields) => {
-  // localFields.value = { ...newFields };
-  Object.assign(localFields, newFields);
-
-});
-
-
-// const convertNumbersToPersian = (text) => {
-//   const englishNumbers = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'];
-//   const persianNumbers = ['۰', '۱', '۲', '۳', '۴', '۵', '۶', '۷', '۸', '۹'];
-
-//   let result = text;
-//   for (let i = 0; i < englishNumbers.length; i++) {
-//     const regex = new RegExp(englishNumbers[i], 'g');
-//     result = result.replace(regex, persianNumbers[i]);
-//   }
-//   return result;
-// }
-
-
-
-
-
-
-
-
-// const updateField = (key, value) => {
-//   localFields.value[key] = value;
-//   emit('update:allFormsFields', { ...localFields.value });
-//   console.log(localFields.value[key]);
-  
-// };
-
-
-// // Define fields using useField
-// const { value: allFormsField , errorMessage: phoneModelValidateError } = useField('phoneModel');
-// const { value: fullNameValidate  , errorMessage : fullNameValidateError} = useField('fullname');
-// const { value: selectedBirthDateValidate , errorMessage : selectedBirthDateValidateError } = useField('selectedDate');
 
 
 
 
 
 const submitData = () => {
+  console.log('STATE FORM VALUE WAS ' + state.form.isCoworker);
+  
   loading.value = true
   const registerContactInfo = {
     id: contactsStore.contacts.length + 1,
@@ -138,7 +100,7 @@ const submitData = () => {
     selectedDate: selectedDate.value,
     isCoworker: state.form.isCoworker,
   };
-  console.log(contactsStore.contacts.length + 1);
+  // console.log(contactsStore.contacts.length + 1);
   console.log(registerContactInfo);
 
   setTimeout(() => {
@@ -159,10 +121,11 @@ const submitData = () => {
       timer: 3000,
       timerProgressBar: true,
     });
-    phoneNumber.value = null
-    fullname.value = null
-    selectedDate.value = null
-    state.form.isCoworker = false
+    // Reset form fields and validation state
+    resetForm({
+      values: { fullname: '', phoneNumber: '', selectedDate: '', isCoworker: false },
+    });
+
     loading.value = false
   }, 1700);
 
@@ -171,7 +134,7 @@ const submitData = () => {
 
 
 const cancelDialog = () => {
-console.log(localFields.phoneNumber);
+console.log(state.form);
 
   emit('update:modelState', false);
     phoneNumber.value = ''
@@ -191,7 +154,7 @@ console.log(localFields.phoneNumber);
 
 };
 const UpdateDialog = (idModel) => {
-  console.log(localFields.phoneNumber);
+  // console.log(localFields.phoneNumber);
   loading.value = true
 
   const updatedContact = {
@@ -334,7 +297,7 @@ const UpdateDialog = (idModel) => {
               variant="flat"
               type="submit"
               color="green"
-              @click="UpdateDialog(currentData)"
+              @click="handleSubmitFormClick(currentData)"
             >
               اعمال تغییرات
             </v-btn>
