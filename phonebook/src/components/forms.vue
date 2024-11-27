@@ -125,10 +125,10 @@ const submitData = () => {
       timer: 3000,
       timerProgressBar: true,
     });
-    phoneModel.value = ''
-     fullname.value = ''
-    selectedDate.value = ''
-    isCoworker.value = ''
+    localFields.phoneNumber = ''
+    localFields.fullname = ''
+    localFields.selectedDate = ''
+    localFields.isCoworker = false
     loading.value = false
   }, 1700);
 
