@@ -1,12 +1,35 @@
 <script setup>
 import { ref, watch, computed , reactive } from 'vue';
-import VuePersianDatetimePicker from 'vue-persian-datetime-picker'
 import { useContactStore } from '../stores/contacts.js';
 import Swal from "sweetalert2";
 import * as yup from 'yup';
-
 import { Form, Field, ErrorMessage } from 'vee-validate';
 import { useField, useForm } from "vee-validate";
+
+const props = defineProps({
+  title: String,
+  modelState: Boolean,
+  openMyDialog: Function,
+  editMode: Boolean,
+  registerMode: Boolean,
+  currentData: Object,
+  UpdateDialog: Function,
+  allFormsFields:Object
+
+})
+const contactsStore = useContactStore();
+const loading = ref(false)
+
+const emit = defineEmits(['update:modelState', 'update:allFormsFields']);
+
+// Local reactive variables
+const localFields = reactive({ ...props.allFormsFields });
+
+watch(() => props.allFormsFields, (newFields) => {
+  // localFields.value = { ...newFields };
+  Object.assign(localFields, newFields);
+
+});
 
 
 const convertNumbersToPersian = (text) => {
@@ -21,16 +44,11 @@ const convertNumbersToPersian = (text) => {
   return result;
 }
 
-
-
-
-
 const schema = yup.object({
   phoneNumber: yup.string().required('شماره تلفن الزامی است').min(11, 'شماره تلفن باید حداقل 11 کاراکتر باشد'),
   fullname: yup.string().required('نام و نام خانوادگی الزامی است'),
   selectedDate: yup.string().required('تاریخ تولد الزامی است'),
 });
-
 
 const { handleSubmit, errors } = useForm({
   validationSchema: schema,
@@ -39,74 +57,22 @@ const { handleSubmit, errors } = useForm({
 
 
 
-const contactsStore = useContactStore();
-
-const props = defineProps({
-  title: String,
-  modelState: Boolean,
-  phoneModel: String,
-  fullname: String,
-  selectedDate: String,
-  isCoworker: Boolean,
-  openMyDialog: Function,
-  editMode: Boolean,
-  registerMode: Boolean,
-  currentData: Object,
-  UpdateDialog: Function,
-  allFormsFields:Object
-
-})
-const emit = defineEmits(['update:modelState', 'update:allFormsFields']);
-
-// Local reactive variables
-const localFields = reactive({ ...props.allFormsFields });
-watch(() => props.allFormsFields, (newFields) => {
-  // localFields.value = { ...newFields };
-  Object.assign(localFields, newFields);
-  //   // برای هر فیلد عددی، تبدیل اعداد به فارسی
-  // Object.keys(localFields).forEach((key) => {
-  //   if (typeof localFields[key] === 'string' && !isNaN(localFields[key])) {
-  //     localFields[key] = convertNumbersToPersian(localFields[key]);
-  //   }
-  // });
-});
-
-const updateField = (key, value) => {
-  localFields.value[key] = value;
-  emit('update:allFormsFields', { ...localFields.value });
-  console.log(localFields.value[key]);
+// const updateField = (key, value) => {
+//   localFields.value[key] = value;
+//   emit('update:allFormsFields', { ...localFields.value });
+//   console.log(localFields.value[key]);
   
-};
+// };
+
+
+// // Define fields using useField
+// const { value: allFormsField , errorMessage: phoneModelValidateError } = useField('phoneModel');
+// const { value: fullNameValidate  , errorMessage : fullNameValidateError} = useField('fullname');
+// const { value: selectedBirthDateValidate , errorMessage : selectedBirthDateValidateError } = useField('selectedDate');
 
 
 
-// Define fields using useField
-const { value: allFormsField , errorMessage: phoneModelValidateError } = useField('phoneModel');
-const { value: fullNameValidate  , errorMessage : fullNameValidateError} = useField('fullname');
-const { value: selectedBirthDateValidate , errorMessage : selectedBirthDateValidateError } = useField('selectedDate');
 
-
-
-const loading = ref(false)
-
-
-
-// Watch for changes in props and update the reactive variables
-watch(() => props.phoneModel, (newVal) => {
-  phoneModel.value = newVal;
-});
-
-watch(() => props.fullname, (newVal) => {
-  fullname.value = newVal;
-});
-
-watch(() => props.selectedDate, (newVal) => {
-  selectedDate.value = newVal;
-});
-
-watch(() => props.isCoworker, (newVal) => {
-  isCoworker.value = newVal;
-});
 
 const submitData = () => {
   loading.value = true
@@ -152,10 +118,10 @@ console.log(localFields.phoneNumber);
 
   emit('update:modelState', false);
   if(props.registerMode){
-    phoneModel.value = ''
-     fullname.value = ''
-    selectedDate.value = ''
-    isCoworker.value = ''
+    localFields.phoneNumber = ''
+    localFields.fullname = ''
+    localFields.selectedDate = ''
+    localFields.isCoworker = false
   emit('update:registerMode', false);
   }
 
