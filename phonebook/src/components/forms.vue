@@ -62,10 +62,7 @@ const state = reactive({
   }
 })
 
-watch(() => state.form.isCoworker, (newValue, oldValue) => {
-  console.log(`isCoworker changed from ${oldValue} to ${newValue}`);
-  state.form.isCoworker = newValue;
-})
+
 
 
 onMounted(() => {
@@ -215,6 +212,9 @@ const UpdateDialog = () => {
   }, 1700);
 
 }
+watch(() => state.form.isCoworker, (newValue) => {
+  state.form.isCoworker = newValue;
+})
 
 </script>
 <template>

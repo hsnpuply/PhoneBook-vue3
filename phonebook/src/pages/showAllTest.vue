@@ -53,7 +53,7 @@ const showAlert = (id) => {
     }
   });
 }
-import { ref, reactive, computed } from "vue";
+import { ref, reactive, computed, onMounted, watch } from "vue";
 
 import { useContactStore } from '../stores/contacts.js';
 
@@ -106,45 +106,18 @@ import Forms from '@/components/forms.vue';
 import { useForm, defineRule, configure } from 'vee-validate';
 import * as yup from 'yup';
 
-// Define Yup schema for validation
-// const schema = yup.object({
-//   name: yup.string().required('Name is required').max(10, 'Name must be at most 10 characters'),
-//   email: yup.string().required('Email is required').email('Email must be valid'),
-//   select: yup.string().required('Please select an option'),
-//   checkbox: yup.bool().oneOf([true], 'You must accept the terms'),
-// });
+const titleStorage=ref('Stylish man')
 
-// Vee-Validate form setup
-// const { handleSubmit, values, errors, resetForm, isValid } = useForm({
-//   validationSchema: schema,
-// });
+localStorage.setItem('mood',titleStorage.value)
 
 
 
-// Clear the form
-const clearForm = () => {
-  resetForm();
-};
+const titleHandler=ref('')
 
-
-const email=ref('')
-const name=ref('')
-const password=ref('')
-
-
-import { Form, Field , ErrorMessage} from 'vee-validate';
-
-const onSubmit=(values)=>{
-  console.log(JSON.stringify(values, null, 2));
-}
-
-const schema = yup.object({
-  email: yup.string().required('it cant be empty').email('Enter a Valid Email'),
-  name: yup.string().required('should fill the name'),
-  password: yup.string().required('please set a password [ More than 8 Characters ]').min(8),
-});
-
-
+watch(titleHandler,(newValue)=>{
+  titleHandler.value=newValue
+  titleStorage.value=titleHandler.value
+})
 
 </script>
 <template>
@@ -155,7 +128,11 @@ const schema = yup.object({
     دفترچه تلفن
     
   </h1>
-  </div>
+  <v-text-field
+              v-model="titleHandler"
+              label="شماره تلفن"
+              placeholder="مثال : 09928717522"
+            />  </div>
 
 </header>
 
