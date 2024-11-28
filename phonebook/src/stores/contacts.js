@@ -7,8 +7,6 @@ export const useContactStore = defineStore('app', {
         {id:1, fullname:'علی علوی', phoneNumber:'09124517520',selectedDate:'2021-11-04',isCoworker:true},
         {id:2, fullname:'محسن مرتضوی', phoneNumber:'09191511912',selectedDate:'2022-11-04',isCoworker:false},
         {id:3, fullname:'حسین میرزا زاده', phoneNumber:'09151611422',selectedDate:'2023-11-04',isCoworker:false},
-        {id:4, fullname:'تقی ایمانی پور', phoneNumber:'09362567656',selectedDate:'2024-11-04',isCoworker:false},
-        {id:5, fullname:'جواد وحید زاده', phoneNumber:'09190098251',selectedDate:'2024-11-04',isCoworker:false},
         
         // {id:3, name:'Vue Member', phoneNumber:'+989363671514'},
         // {id:4, name:'Xiao Lee', phoneNumber:'13092608772'},

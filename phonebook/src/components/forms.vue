@@ -1,5 +1,5 @@
 <script setup>
-import { ref, watch, computed , reactive, onMounted } from 'vue';
+import { ref, watch, computed , reactive, onMounted, onUpdated } from 'vue';
 import { useContactStore } from '../stores/contacts.js';
 import Swal from "sweetalert2";
 import * as yup from 'yup';
@@ -12,10 +12,11 @@ const props = defineProps({
   openMyDialog: Function,
   editMode: Boolean,
   registerMode: Boolean,
-  currentData: Object,
+  currentData: Number,
   UpdateDialog: Function,
   allFormsFields:Object
 })
+
 
 const contactsStore = useContactStore();
 const loading = ref(false)
@@ -24,8 +25,32 @@ const emit = defineEmits(['update:modelState', 'update:allFormsFields']);
 
 // Local reactive variables
 // const localFields = reactive({ ...props.allFormsFields });
+watch(props.modelState,()=>{
+  props.registerMode ? alert('Register Mode e ') : alert('Edit Mode ya smthng else')
+})
+ 
+onMounted(()=>{
+  console.log('This Form Mounted!');
+  
+})
 
 
+
+onUpdated(()=>{
+console.log('the id :',props.currentData);
+
+if (props.allFormsFields && props.editMode) {
+    Object.assign(state.form, props.allFormsFields);
+  }
+  if(props.currentData){
+    phoneNumber.value = state.form.phoneNumber
+    fullname.value = state.form.fullname
+    selectedDate.value = state.form.selectedDate
+  }
+
+  console.log("Updated form data:", state.form);
+
+})
 
 const state = reactive({
   form:{
@@ -37,6 +62,12 @@ const state = reactive({
   }
 })
 
+watch(() => state.form.isCoworker, (newValue, oldValue) => {
+  console.log(`isCoworker changed from ${oldValue} to ${newValue}`);
+  state.form.isCoworker = newValue;
+})
+
+
 onMounted(() => {
   if (props.allFormsFields) {
     Object.assign(state.form, props.allFormsFields);
@@ -46,9 +77,9 @@ onMounted(() => {
 
 
 const schema = yup.object({
-  fullname: yup.string().nullable(true).required("نوشتن نام و نام خانوادگی الزامیست"),
-  phoneNumber:yup.string().nullable(true).required("وارد کردن شماره تلفن الزامیست"),
-  selectedDate:yup.string().nullable(true).required("وارد کردن تاریخ تولد الزامیست")
+  fullname: yup.string().required("نوشتن نام و نام خانوادگی الزامیست"),
+  phoneNumber:yup.string().required("وارد کردن شماره تلفن الزامیست"),
+  selectedDate:yup.string().required("وارد کردن تاریخ تولد الزامیست")
 });
 
 
@@ -69,12 +100,11 @@ const handleSubmitFormClick = handleSubmit( (item) => {
   props.registerMode ? submitData() : UpdateDialog(item)
 });
 
-const handleSubmitFormClickByEdit = (item)=>{
-  handleSubmit( () => {
-  props.editMode ? UpdateDialog(item) :'?'
+// const handleSubmitFormClickByEdit =
+//   handleSubmit( (item) => {
+//   props.editMode ? UpdateDialog(item) :'?'
 
-});
-}
+// });
 
 const submitNewData = ()=>{
   // emit('update:modelState', false);
@@ -137,44 +167,33 @@ const cancelDialog = () => {
 console.log(state.form);
 
   emit('update:modelState', false);
-    phoneNumber.value = ''
-    fullname.value = ''
-    selectedDate.value = ''
-    state.form.isCoworker = false
-    if(props.editMode){
-
-      emit('update:registerMode', false);
-    }else if (props.registerMode){
-      emit('update:editMode', false);
-      
-    }
+  resetForm({
+      values: { fullname: '', phoneNumber: '', selectedDate: '', isCoworker: false },
+    });
 
   console.log(props.modelState);
 
 
 };
-const UpdateDialog = (idModel) => {
-  // console.log(localFields.phoneNumber);
-  loading.value = true
-
+const UpdateDialog = () => {
   const updatedContact = {
-    // id: props.currentData,
-    // phoneNumber: phoneNumber.value,
-    // fullname: fullname.value,
-    // selectedDate: selectedDate.value,
-    // isCoworker: state.form.isCoworker,
     id: props.currentData,
-    phoneNumber: state.form.phoneNumber,
-    fullname: state.form.fullname,
-    selectedDate: state.form.selectedDate,
+    phoneNumber: phoneNumber.value,
+    fullname: fullname.value,
+    selectedDate: selectedDate.value,
     isCoworker: state.form.isCoworker,
+ 
   };
 
+  loading.value = true
+
+  
 
   setTimeout(() => {
-    contactsStore.updateContact(idModel, updatedContact);
-    console.log(props.currentData)
-    console.log(updatedContact);
+    contactsStore.updateContact(state.form.id, updatedContact);
+    // console.log(idModel)
+    console.log('↑ idish')
+    console.log(updatedContact , state.form.id);
 
     emit('update:modelState', false);
 
@@ -188,15 +207,12 @@ const UpdateDialog = (idModel) => {
       showConfirmButton: false,
       timer: 3000,
       timerProgressBar: true,
-
+    
     });
-  loading.value = false
-  phoneNumber.value = ''
-     fullname.value = ''
-    selectedDate.value = ''
-    state.form.isCoworker= false
-  }, 1700);
 
+  loading.value = false
+
+  }, 1700);
 
 }
 

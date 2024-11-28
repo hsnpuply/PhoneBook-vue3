@@ -1,32 +1,5 @@
 {
   "contacts": [
-    {
-      "id": "dd45",
-      "fullname": "q",
-      "phoneNumber": "w",
-      "selectedDate": "222222-02-22",
-      "isCoworker": true
-    },
-    {
-      "id": "c853",
-      "fullname": "qwe",
-      "phoneNumber": "qweqw",
-      "selectedDate": "2222-02-22",
-      "isCoworker": true
-    },
-    {
-      "id": "03d5",
-      "fullname": "",
-      "phoneNumber": "",
-      "selectedDate": "",
-      "isCoworker": false
-    },
-    {
-      "id": "7929",
-      "fullname": "",
-      "phoneNumber": "",
-      "selectedDate": "",
-      "isCoworker": false
-    }
+  
   ]
 }
